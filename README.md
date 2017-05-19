@@ -3,8 +3,8 @@ Trabalhos da disciplina de Computação Gráfica
 
 
 # Desenvolvido por:
-[@ricardobr001](https://github.com/ricardobr001)
+Ricardo Mendes Leal Junior [@ricardobr001](https://github.com/ricardobr001)
 
-[@gabrielaRamos](https://github.com/gabrielaRamos)
+Gabriela Ramos [@gabrielaRamos](https://github.com/gabrielaRamos)
 
-[@CaioGiacomelli](https://github.com/CaioGiacomelli)
+Caio Henrique Giacomelli [@CaioGiacomelli](https://github.com/CaioGiacomelli)
