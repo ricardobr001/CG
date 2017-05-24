@@ -37,6 +37,14 @@
 			animate();
 
 			function init() {
+
+				matrix = new THREE.Matrix4();
+				matrix.set(1,  0,  0,  0,
+       				0,  1,  0,  0,
+       				0,  0,  1,  -30,
+       				0,  0,  0,  1);
+
+
 				/*Creating the Container*/
 				container = document.createElement('div');
 				document.body.appendChild(container);
@@ -70,7 +78,7 @@
 	                objLoader.setPath('assets/');
 
 	                objLoader.load('Woody.obj', function (object) {
-	                	object.translateZ(-30);
+	                	object.applyMatrix(matrix);
 	                    scene.add(object);
 
 	                });
