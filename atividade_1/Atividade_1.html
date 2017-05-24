@@ -39,9 +39,15 @@
 			function init() {
 
 				matrix = new THREE.Matrix4();
-				matrix.set(1,  0,  0,  0,
+				matrix.set(1,  0,  0,  2,
        				0,  1,  0,  0,
-       				0,  0,  1,  -30,
+       				0,  0,  1,  -70,
+       				0,  0,  0,  1);
+
+				matrix2 = new THREE.Matrix4();
+				matrix2.set(1,  0,  0,  -2,
+       				0,  1,  0,  0,
+       				0,  0,  1,  -70,
        				0,  0,  0,  1);
 
 
@@ -79,6 +85,25 @@
 
 	                objLoader.load('Woody.obj', function (object) {
 	                	object.applyMatrix(matrix);
+	                    scene.add(object);
+
+	                });
+            	});
+
+            	/*Loading the model*/
+				var mtlLoader2 = new THREE.MTLLoader();
+ 	      	 	mtlLoader2.setBaseUrl('assets/');
+    	    	mtlLoader2.setPath('assets/');
+
+            	mtlLoader2.load('Lotso.mtl', function (materials) {
+	                materials.preload();
+
+	                var objLoader2 = new THREE.OBJLoader();
+	                objLoader2.setMaterials(materials);
+	                objLoader2.setPath('assets/');
+
+	                objLoader2.load('Lotso.obj', function (object) {
+	                	object.applyMatrix(matrix2);
 	                    scene.add(object);
 
 	                });
