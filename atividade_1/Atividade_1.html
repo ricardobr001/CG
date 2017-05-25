@@ -51,14 +51,23 @@
        				0,  0,  0,  1);
 
 
+				matrixCamera = new THREE.Matrix4();
+				matrixCamera.set(
+					1, 0, 0, 2,
+					0, 1, 0, 1,
+					0, 0, 1, 30,
+				 	0, 0, 0, 1
+				);
+
 				/*Creating the Container*/
 				container = document.createElement('div');
 				document.body.appendChild(container);
 
 				/*Creating the camera and positioning it*/
 				camera = new THREE.PerspectiveCamera(4, window.innerWidth / window.innerHeight, 1, 100);
-				camera.position.z = 1;
-				camera.position.y = 1;
+				camera.applyMatrix(matrixCamera);
+				//camera.position.z = 1;
+				//camera.position.y = 1;
 
 				/*Creating the Scene*/
 				scene = new THREE.Scene();
