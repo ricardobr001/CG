@@ -16,7 +16,6 @@
 				margin: 0px;
 				overflow: hidden;
 			}
-
 		</style>
 	</head>
 	<body>
@@ -24,57 +23,49 @@
 		<script src="MTLLoader.js"></script>
 		<script src="OBJLoader.js"></script>
 
+
+		<script id="vertex" type="x-shader/x-vertex">
+		     varying vec2 vUv;
+			void main()
+			{
+				vUv = uv;
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+				gl_Position = projectionMatrix * mvPosition;
+			}
+		</script>
+
+		<script id="fragment" type="x-shader/x-fragment">
+	        
+			uniform vec2 resolution;
+			varying vec2 vUv;
+			void main( void ) {
+				vec2 position = -25.0 + 3.0 * vUv;
+				float red = abs( sin( position.x * position.y ) );
+				float green = abs( sin( position.x * position.y ) );
+				float blue = abs( sin( position.x * position.y) );
+				gl_FragColor = vec4( red, green, blue, 1.0 );
+			}
+    	</script>
+
 		<script>
 			/*Declaring variables*/
 			var container, stats;
 			var camera, scene, renderer;
-			var mouseX = 0, mouseY = 0;
 			var windowHalfX = window.innerWidth / 2;
-			var windowHalfY = window.innerHeight / 2;
+			var windowHalfY = window.innerHeight / 2;	
+			var obj_Woody;
+			var obj_Lotso;
+			var obj_Bull;
 
-			/*Calling the functions*/
-			init();
-			animate();
-
-			function init() {
-
-				/*Translation woody matrix*/
-				/*  1	 0	  0    2
-					0    1    0    0
-				    0    0    1  -70
-					0    0    0    1*/
-
-				/*Rotation woody matrix*/
-				/*cos(45)   sin(45)   0    0
-				 -sin(45)   cos(45)   0    0
-				     0        0       0    0
-                     0        0       0    0*/
-
+    			init();
+    			animate();
+			
+			function init(){
 
 				matrixWoody = new THREE.Matrix4();
 				matrixWoody.set(
 					0.707106781187,  0.707106781187,  0,  1.414213562374,
        				-0.707106781187,  0.707106781187,  0,  -1.414213562374,
-       				0,  0,  1,  0,
-       				0,  0,  0,  1
-       			);
-
-       			/*Translation lotso matrix*/
-				/*  1	 0	  0   -2
-					0    1    0    0
-				    0    0    1  -70
-					0    0    0    1*/
-
-				/*Rotation lotso matrix*/
-				/*cos(45)   -sin(45)  0    0
-				 sin(45)   cos(45)    0    0
-				     0        0       0    0
-                     0        0       0    0*/
-
-				matrixLotso = new THREE.Matrix4();
-				matrixLotso.set(
-					0.707106781187,  -0.707106781187,  0,  -1.414213562374,
-       				0.707106781187,  0.707106781187,  0,  -1.414213562374,
        				0,  0,  1,  0,
        				0,  0,  0,  1
        			);
@@ -96,87 +87,94 @@
 				camera = new THREE.PerspectiveCamera(4, window.innerWidth / window.innerHeight, 1, 100);
 				/*Using the matrixCamera in the camera*/
 				camera.applyMatrix(matrixCamera);
-
+				
 				/*Creating the Scene*/
 				scene = new THREE.Scene();
 
 				/*Creating the ambient, light and adding it to the scene*/
-				var ambient = new THREE.AmbientLight(0x444444);
+				var ambient = new THREE.AmbientLight(0x444444);		
 				scene.add(ambient);
-
 				var directionalLight = new THREE.DirectionalLight(0xffeedd);
 				directionalLight.position.set(0, 0, 1).normalize();
 				scene.add( directionalLight );
 
 				/*Loading the model*/
+				
 				var mtlLoader = new THREE.MTLLoader();
- 	      	 	mtlLoader.setBaseUrl('assets/');
     	    	mtlLoader.setPath('assets/');
-
             	mtlLoader.load('Woody.mtl', function (materials) {
 	                materials.preload();
-
 	                var objLoader = new THREE.OBJLoader();
 	                objLoader.setMaterials(materials);
 	                objLoader.setPath('assets/');
-
 	                objLoader.load('Woody.obj', function (object) {
+
 						/*Applying the woody matrix in woody obj*/
+						
 	                	object.applyMatrix(matrixWoody);
-	                    scene.add(object);
-
+	                    object.rotation.x = -50;
+			      		scene.add( object );
+			      		obj_Woody = object;
 	                });
             	});
+					
 
-            	/*Loading the model*/
-				var mtlLoader2 = new THREE.MTLLoader();
- 	      	 	mtlLoader2.setBaseUrl('assets/');
-    	    	mtlLoader2.setPath('assets/');
+				var mtlLoader1 = new THREE.MTLLoader();
+				mtlLoader1.setPath('assets/');
+				mtlLoader1.load('Lotso.mtl', function( materials ){
+					materials.preload();
+					var loader = new THREE.OBJLoader(); 
+					loader.load('assets/Lotso.obj',	function ( object ) {
+						var LotsoMaterial = new THREE.ShaderMaterial({								
+							uniforms: {
 
-            	mtlLoader2.load('Lotso.mtl', function (materials) {
-	                materials.preload();
+							time: { value: 1.0 },
+							resolution: { value: new THREE.Vector2() }
 
-	                var objLoader2 = new THREE.OBJLoader();
-	                objLoader2.setMaterials(materials);
-	                objLoader2.setPath('assets/');
+							},
 
-	                objLoader2.load('Lotso.obj', function (object) {
-						/*Aplying the lotso matrix in lotso obj*/
-	                	object.applyMatrix(matrixLotso);
-	                    scene.add(object);
-
-	                });
-            	});
+				   			vertexShader: document.getElementById('vertex').innerHTML,
+				   			fragmentShader: document.getElementById('fragment').innerHTML
+						});
+						object.traverse( function ( child ) {
+				        	if ( child instanceof THREE.Mesh ) {				        		
+				            	child.material = LotsoMaterial;
+				        	}				        	
+				    	});
+			  						  		
+				  		
+				  		object.position.set(-2.4, -1.2, 0);
+				  		object.rotation.y = -10;
+			      		scene.add( object );
+			      		obj_Lotso = object;
+			      		
+				});
+				});
 
 				/*Creating the renderer variable*/
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio(window.devicePixelRatio);
 				renderer.setSize(window.innerWidth, window.innerHeight);
 				container.appendChild(renderer.domElement);
-
-				window.addEventListener('resize', onWindowResize, false);
+				window.addEventListener('resize', onWindowResize, false);		
 			}
 
-			/*Function that will resize the content*/
-			function onWindowResize() {
-				windowHalfX = window.innerWidth / 2;
-				windowHalfY = window.innerHeight / 2;
 
+			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
-
 				renderer.setSize( window.innerWidth, window.innerHeight );
-			}
-
-			/*Function that will animate*/
-			function animate() {
-				requestAnimationFrame(animate);
+			}					
+			function animate() {												
+				requestAnimationFrame( animate );
 				render();
 			}
+			function render() {			
 
-			/*Function that will render the scene with the camera*/
-			function render() {
-				renderer.render(scene, camera);
+				obj_Woody.rotation.y += 0.03;
+				obj_Lotso.rotation.y += 0.05;
+				
+				renderer.render( scene, camera );
 			}
 		</script>
 	</body>
