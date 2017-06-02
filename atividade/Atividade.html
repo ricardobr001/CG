@@ -35,7 +35,7 @@
 		</script>
 
 		<script id="fragment" type="x-shader/x-fragment">
-	        
+
 			uniform vec2 resolution;
 			varying vec2 vUv;
 			void main( void ) {
@@ -46,20 +46,20 @@
 				gl_FragColor = vec4( red, green, blue, 1.0 );
 			}
     	</script>
-    
+
 		<script>
 			/*Declaring variables*/
 			var container, stats;
 			var camera2, scene, renderer;
 			var windowHalfX = window.innerWidth / 2;
-			var windowHalfY = window.innerHeight / 2;	
+			var windowHalfY = window.innerHeight / 2;
 			var obj_Woody;
 			var obj_Lotso;
 			var obj_Ball;
 
     			init();
     			animate();
-			
+
 			function init(){
 
 				matrixWoody = new THREE.Matrix4();
@@ -90,18 +90,18 @@
 				camera = new THREE.PerspectiveCamera(4, window.innerWidth / window.innerHeight, 1, 100);
 				/*Using the matrixCamera in the camera*/
 				camera.applyMatrix(matrixCamera);
-				
-			
+
+
 
 				/*Creating the ambient, light and adding it to the scene*/
-				var ambient = new THREE.AmbientLight(0x444444);		
+				var ambient = new THREE.AmbientLight(0x444444);
 				scene.add(ambient);
 				var directionalLight = new THREE.DirectionalLight(0xffeedd);
 				directionalLight.position.set(0, 0, 1).normalize();
 				scene.add( directionalLight );
 
 				/*Loading the model*/
-				
+
 				var mtlLoader = new THREE.MTLLoader();
     	    	mtlLoader.setPath('assets/');
             	mtlLoader.load('Woody.mtl', function (materials) {
@@ -112,14 +112,33 @@
 	                objLoader.load('Woody.obj', function (object) {
 
 						/*Applying the woody matrix in woody obj*/
-						
+
 	                	object.applyMatrix(matrixWoody);
 	                    object.rotation.x = -50;
 			      		scene.add( object );
 			      		obj_Woody = object;
 	                });
             	});
-				
+
+							// Inserção do objeto Bullseye
+
+							var mtlLoader2 = new THREE.MTLLoader();
+							mtlLoader2.setPath('assets/');
+							mtlLoader2.load('Bullseye.mtl', function( materials ){
+								materials.preload();
+								var objLoader1 = new THREE.OBJLoader();
+								objLoader1.setMaterials( materials );
+								objLoader1.setPath('assets/');
+								objLoader1.load('Bullseye.obj', function( object ){
+
+										object.position.set(-0.5, -2.5, 0);
+
+											scene.add( object );
+											obj_Bull = object;
+											obj_Bull.rotation.y += 0.05;
+								});
+							});
+
 				var mtlLoader3 = new THREE.MTLLoader();
 				mtlLoader3.setPath('assets/');
 				mtlLoader3.load('LuxoBall.mtl', function( materials ){
@@ -128,47 +147,41 @@
 					objLoader2.setMaterials( materials );
 					objLoader2.setPath('assets/');
 					objLoader2.load('LuxoBall.obj', function( object ){
-						var BallMaterial = new THREE.ShaderMaterial({								
+						var BallMaterial = new THREE.ShaderMaterial({
 							uniforms: {
 
 							time: { value: 1.0 },
 							resolution: { value: new THREE.Vector2() }
 
 							},
-
 				   			vertexShader: document.getElementById('vertex').innerHTML,
 				   			fragmentShader: document.getElementById('fragment').innerHTML
 						});
 						object.traverse( function ( child ) {
-				        	if ( child instanceof THREE.Mesh ) {				        		
+				        	if ( child instanceof THREE.Mesh ) {
 				            	child.material = BallMaterial;
-				        	}				        	
+				        	}
 				    	});
-			  				
-									  	
+
 				  		object.position.set(-0.3, -0.0, 0);
 				  		object.scale.x = object.scale.y = object.scale.z = 5;
 			      		scene.add( object );
 			      		obj_Ball = object;
-			      		
+
 					});
 				});
-				
 
 				var mtlLoader1 = new THREE.MTLLoader();
 				mtlLoader1.setPath('assets/');
 				mtlLoader1.load('Lotso.mtl', function( materials ){
 					materials.preload();
-					var loader = new THREE.OBJLoader(); 
+					var loader = new THREE.OBJLoader();
 					loader.setMaterials( materials );
 					loader.load('assets/Lotso.obj',	function ( object ) {
-						
-			  						  	
 				  		object.position.set(-2.4, -1.2, 0);
 				  		object.rotation.y = -10;
 			      		scene.add( object );
 			      		obj_Lotso = object;
-			      		
 				});
 				});
 
@@ -177,22 +190,20 @@
 				renderer.setPixelRatio(window.devicePixelRatio);
 				renderer.setSize(window.innerWidth, window.innerHeight);
 				container.appendChild(renderer.domElement);
-				window.addEventListener('resize', onWindowResize, false);		
+				window.addEventListener('resize', onWindowResize, false);
 			}
-
 
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 				renderer.setSize( window.innerWidth, window.innerHeight );
-			}					
-			function animate() {												
+			}
+			function animate() {
 				requestAnimationFrame( animate );
 				render();
 			}
 
-			
-			function render() {			
+			function render() {
 
 				obj_Woody.rotation.y += 0.03;
 				obj_Lotso.rotation.y += 0.05;
