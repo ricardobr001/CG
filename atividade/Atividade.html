@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Atividade 1 - Computaçao Gráfica</title>
+		<title>Atividade - Computaçao Gráfica</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -46,16 +46,16 @@
 				gl_FragColor = vec4( red, green, blue, 1.0 );
 			}
     	</script>
-
+    
 		<script>
 			/*Declaring variables*/
 			var container, stats;
-			var camera, scene, renderer;
+			var camera2, scene, renderer;
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;	
 			var obj_Woody;
 			var obj_Lotso;
-			var obj_Bull;
+			var obj_Ball;
 
     			init();
     			animate();
@@ -83,13 +83,15 @@
 				container = document.createElement('div');
 				document.body.appendChild(container);
 
+				/*Creating the Scene*/
+				scene = new THREE.Scene();
+
 				/*Creating the camera and positioning it*/
 				camera = new THREE.PerspectiveCamera(4, window.innerWidth / window.innerHeight, 1, 100);
 				/*Using the matrixCamera in the camera*/
 				camera.applyMatrix(matrixCamera);
 				
-				/*Creating the Scene*/
-				scene = new THREE.Scene();
+			
 
 				/*Creating the ambient, light and adding it to the scene*/
 				var ambient = new THREE.AmbientLight(0x444444);		
@@ -117,15 +119,16 @@
 			      		obj_Woody = object;
 	                });
             	});
-					
-
-				var mtlLoader1 = new THREE.MTLLoader();
-				mtlLoader1.setPath('assets/');
-				mtlLoader1.load('Lotso.mtl', function( materials ){
+				
+				var mtlLoader3 = new THREE.MTLLoader();
+				mtlLoader3.setPath('assets/');
+				mtlLoader3.load('LuxoBall.mtl', function( materials ){
 					materials.preload();
-					var loader = new THREE.OBJLoader(); 
-					loader.load('assets/Lotso.obj',	function ( object ) {
-						var LotsoMaterial = new THREE.ShaderMaterial({								
+					var objLoader2 = new THREE.OBJLoader();
+					objLoader2.setMaterials( materials );
+					objLoader2.setPath('assets/');
+					objLoader2.load('LuxoBall.obj', function( object ){
+						var BallMaterial = new THREE.ShaderMaterial({								
 							uniforms: {
 
 							time: { value: 1.0 },
@@ -138,11 +141,29 @@
 						});
 						object.traverse( function ( child ) {
 				        	if ( child instanceof THREE.Mesh ) {				        		
-				            	child.material = LotsoMaterial;
+				            	child.material = BallMaterial;
 				        	}				        	
 				    	});
-			  						  		
-				  		
+			  				
+									  	
+				  		object.position.set(-0.3, -0.0, 0);
+				  		object.scale.x = object.scale.y = object.scale.z = 5;
+			      		scene.add( object );
+			      		obj_Ball = object;
+			      		
+					});
+				});
+				
+
+				var mtlLoader1 = new THREE.MTLLoader();
+				mtlLoader1.setPath('assets/');
+				mtlLoader1.load('Lotso.mtl', function( materials ){
+					materials.preload();
+					var loader = new THREE.OBJLoader(); 
+					loader.setMaterials( materials );
+					loader.load('assets/Lotso.obj',	function ( object ) {
+						
+			  						  	
 				  		object.position.set(-2.4, -1.2, 0);
 				  		object.rotation.y = -10;
 			      		scene.add( object );
@@ -169,12 +190,16 @@
 				requestAnimationFrame( animate );
 				render();
 			}
+
+			
 			function render() {			
 
 				obj_Woody.rotation.y += 0.03;
 				obj_Lotso.rotation.y += 0.05;
-				
-				renderer.render( scene, camera );
+				obj_Ball.rotation.x += 0.05;
+
+				renderer.render(scene, camera);
+
 			}
 		</script>
 	</body>
