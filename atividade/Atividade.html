@@ -58,11 +58,23 @@
 			var obj_Woody;
 			var obj_Lotso;
 			var obj_Ball;
+			var bezier_curve;
+			var count = 0, flag_lotso = true;
 
     			init();
     			animate();
 
 			function init(){
+				/*Creating the new bezier curve*/
+				bezier_curve = new THREE.CubicBezierCurve3(
+					new THREE.Vector3(-2.4, -1.2, 0),		//Starting point
+					new THREE.Vector3(-3.2, -4, 0),		//First control point
+					new THREE.Vector3(-4, 0, 0),		//Second control point
+					new THREE.Vector3(-4.8, -1.2, 0)			//Ending point
+				);
+
+				pontos = new THREE.Geometry();
+				pontos.vertices = bezier_curve.getPoints(100);
 
 				matrixWoody = new THREE.Matrix4();
 				matrixWoody.set(
@@ -77,7 +89,7 @@
 				matrixCamera.set(
 					1, 0, 0, -0.25,
 					0, 1, 0, -0.5,
-					0, 0, 1, 60,
+					0, 0, 1, 100,
 				 	0, 0, 0, 1
 				);
 
@@ -89,14 +101,15 @@
 				scene = new THREE.Scene();
 
 				/*Creating the camera and positioning it*/
-				camera1 = new THREE.PerspectiveCamera(4, window.innerWidth / window.innerHeight, 1, 100);
+				camera1 = new THREE.PerspectiveCamera(4, window.innerWidth / window.innerHeight, 1, 1000);
 				/*Using the matrixCamera in the camera*/
 				camera1.applyMatrix(matrixCamera);
 				camera = camera1;
 
 				/*Utilizaçao de duas cameras */
 				camera2 = new THREE.PerspectiveCamera(4, window.innerWidth / window.innerHeight, 1, 1000);
-				camera2.position.z = -80;
+				camera2.position.z = -100;
+				camera2.position.y = 5;
 				camera2.lookAt(new THREE.Vector3(0,0,0));
 
 				/*Creating the ambient, light and adding it to the scene*/
@@ -190,7 +203,7 @@
 					loader.load('assets/Lotso.obj',	function ( object ) {
 
 				  		object.position.set(-2.4, -1.2, 0);
-				  		object.rotation.y = -10;
+				  		//object.rotation.y = -10;
 			      		scene.add( object );
 			      		obj_Lotso = object;
 					});
@@ -211,13 +224,31 @@
 			}
 			function animate() {
 				requestAnimationFrame( animate );
+				move_lotso();
 				render();
+			}
+
+			function move_lotso(){
+				//count = 0;
+				obj_Lotso.position.x = pontos.vertices[count].x;
+				obj_Lotso.position.y = pontos.vertices[count].y;
+				obj_Lotso.position.z = pontos.vertices[count].z;
+				obj_Lotso.rotation.y += 0.05;
+
+				if (count == 99)
+					flag_lotso = false;
+				else if (count == 0)
+					flag_lotso = true;
+
+				if (flag_lotso == true)
+					count++;
+				else
+					count--;
 			}
 
 			function render() {
 
 				obj_Woody.rotation.y += 0.03;
-				obj_Lotso.rotation.y += 0.05;
 				obj_Ball.rotation.x += 0.05;
 
 				/*Getting the value from the button to change the camera*/
@@ -234,3 +265,4 @@
 		</script>
 	</body>
 </html>
+
