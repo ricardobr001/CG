@@ -60,7 +60,8 @@
 			var obj_Ball;
 			var bezier_curve;
 			var count = 0, flag_lotso = true;
-
+			var UNITWIDTH = 90;               
+			var UNITHEIGHT = 45;                
     			init();
     			animate();
 
@@ -101,10 +102,12 @@
 				scene = new THREE.Scene();
 
 				/*Creating the camera and positioning it*/
-				camera1 = new THREE.PerspectiveCamera(4, window.innerWidth / window.innerHeight, 1, 1000);
+				camera1 = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
 				/*Using the matrixCamera in the camera*/
-				camera1.applyMatrix(matrixCamera);
-				camera = camera1;
+				camera1.position.y = 180; // Height the camera will be looking from
+			    camera1.position.x = 0;
+			    camera1.position.z = 200;
+			   	camera1.lookAt(scene.position);
 
 				/*Utilizaçao de duas cameras */
 				camera2 = new THREE.PerspectiveCamera(4, window.innerWidth / window.innerHeight, 1, 1000);
@@ -119,6 +122,111 @@
 				directionalLight.position.set(0, 0, 1).normalize();
 				scene.add( directionalLight );
 
+
+				/*Criando o labirinto*/
+								var map = [
+			        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1,],
+			        [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,1,1,1,1,1,],
+			      	[1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,1,1,1,1,1,],
+			        [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,0,0,1,1,],
+			        [1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,0,0,1,1,],
+			      	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+		        	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,],
+			        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,]
+			       
+			    ];
+
+			    var sphGeo = new THREE.SphereGeometry( 9, 100, 100 );
+				var sphMat = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+			
+			    var widthOffset = UNITWIDTH / 5;
+			    var heightOffset = UNITHEIGHT / 5;
+
+	
+			   var totalSphWide = map[0].length;
+
+			    for (var i = 0; i < totalSphWide; i++) {
+			        for (var j = 0; j < map[i].length; j++) {
+			         
+			            if (map[i][j]) {
+			             
+			                var sphere = new THREE.Mesh( sphGeo, sphMat );
+			               
+			                sphere.position.z = (i - totalSphWide / 2) * UNITWIDTH + widthOffset*35;
+			                sphere.position.y = -200;
+			                sphere.position.x = (j - 11) * 20;
+			          
+			                scene.add(sphere);
+			             
+			            }
+			        }
+			    }
+
+
+				 var materials = [
+		       new THREE.MeshLambertMaterial({
+		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+		           side: THREE.BackSide
+		       }),
+		       new THREE.MeshLambertMaterial({
+		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+		           side: THREE.BackSide
+		       }),
+		       new THREE.MeshLambertMaterial({
+		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+		           side: THREE.BackSide
+		       }),
+		       new THREE.MeshLambertMaterial({
+		           map: THREE.ImageUtils.loadTexture('assets/chao.jpg'),
+		           side: THREE.BackSide
+		       }),
+		       new THREE.MeshLambertMaterial({
+		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+		           side: THREE.BackSide
+		       }),
+		       new THREE.MeshLambertMaterial({
+		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+		           side: THREE.BackSide
+		       })
+		    ];
+			
+			dice = new THREE.Mesh( new THREE.BoxGeometry( 950,950,950), materials );
+				dice.position.set(0,0,-400);
+				scene.add( dice );
+
+
+				//Criando cenário
+				/*
+				var loader = new THREE.TextureLoader();
+				var matCaixaCenario = new THREE.MeshPhongMaterial({
+
+					map: loader.load( 'assets/back_toyStory.jpg', function(texture) {
+					    console.log("Textura do cenário carregada");
+					}),
+					side: THREE.BackSide
+				});
+				var geoCaixaCenario = new THREE.BoxGeometry( 70, 70, 1000 );
+				var caixaCenario = new THREE.Mesh( geoCaixaCenario, matCaixaCenario );
+				caixaCenario.position.set(0,0,-100);
+				caixaCenario.doubleSided = true;
+				caixaCenario.receiveShadow = true;
+				scene.add(caixaCenario);
+
 				/*Loading the model*/
 
 				var mtlLoader = new THREE.MTLLoader();
@@ -132,8 +240,9 @@
 	                objLoader.load('Woody.obj', function (object) {
 
 						/*Applying the woody matrix in woody obj*/
-
-	                	object.applyMatrix(matrixWoody);
+						object.position.set(-120, 0, -80);
+	                	object.scale.x = object.scale.y = object.scale.z = 20;
+	                	//object.applyMatrix(matrixWoody);
 	                    object.rotation.x = -50;
 			      		scene.add( object );
 			      		obj_Woody = object;
@@ -152,9 +261,10 @@
 					objLoader1.setPath('assets/');
 					objLoader1.load('Bullseye.obj', function( object ){
 
-							object.position.set(-0.5, -2.5, 0);
+							object.position.set(120, 0, -80);
 
 								scene.add( object );
+								object.scale.x = object.scale.y = object.scale.z = 20;
 								obj_Bull = object;
 								obj_Bull.rotation.y += 0.05;
 					});
@@ -186,7 +296,7 @@
 				    	});
 
 				  		object.position.set(-0.3, -0.0, 0);
-				  		object.scale.x = object.scale.y = object.scale.z = 5;
+				  		object.scale.x = object.scale.y = object.scale.z = 200;
 			      		scene.add( object );
 			      		obj_Ball = object;
 
@@ -202,8 +312,8 @@
 					loader.setMaterials( materials );
 					loader.load('assets/Lotso.obj',	function ( object ) {
 
-				  		object.position.set(-2.4, -1.2, 0);
-				  		//object.rotation.y = -10;
+				  		object.position.set(-200, 0, 30);
+				  		object.scale.x = object.scale.y = object.scale.z = 15;
 			      		scene.add( object );
 			      		obj_Lotso = object;
 					});
@@ -230,9 +340,9 @@
 
 			function move_lotso(){
 				//count = 0;
-				obj_Lotso.position.x = pontos.vertices[count].x;
-				obj_Lotso.position.y = pontos.vertices[count].y;
-				obj_Lotso.position.z = pontos.vertices[count].z;
+				obj_Lotso.position.x = -100 + pontos.vertices[count].x * 10;
+				obj_Lotso.position.y = pontos.vertices[count].y * 10;
+				obj_Lotso.position.z = pontos.vertices[count].z * 10;
 				obj_Lotso.rotation.y += 0.05;
 
 				if (count == 99)
