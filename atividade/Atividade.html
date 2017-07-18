@@ -356,9 +356,9 @@
 
 			function detection_colision_woody(){
 				var originPoint = obj_Woody.position.clone();
-				//var rayCaster = new THREE.Raycaster(originPoint);
+				var rayCaster = new THREE.Raycaster(originPoint);
 
-				for (var vertexIndex = 0; vertexIndex < obj_Woody.geometry.vertices.length; vertexIndex++)
+				/*for (var vertexIndex = 0; vertexIndex < obj_Woody.geometry.vertices.length; vertexIndex++)
 				{
 					var localVertex = obj_Woody.geometry.vertices[vertexIndex].clone();
 					var globalVertex = localVertex.applyMatrix4( obj_Woody.matrix );
@@ -368,14 +368,14 @@
 					var collisionResults = ray.intersectObjects( ObjetosDeColisao );
 					if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() )
 						return false;
-				}
+				}*/
 
-				/*if(rayIntersect(rayCaster, PLAYERCOLLISIONDISTANCE)){
+				if(rayIntersect(rayCaster, PLAYERCOLLISIONDISTANCE)){
 					return true;
 				}
 				else {
 					return false;
-				}*/
+				}
 			}
 
 			/*Function that detect the intersecting ray*/
