@@ -129,7 +129,7 @@
 								var map = [
 			        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1,],
 			        [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,1,1,1,1,1,],
-			      	[1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,1,1,1,1,1,],
+			      	[1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,0,0,1,],
 			        [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,0,0,1,1,],
 			        [1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,0,0,1,1,],
 			      	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1,],
@@ -294,7 +294,7 @@
 					loader.setMaterials( materials );
 					loader.load('assets/Lotso.obj',	function ( object ) {
 				  		object.position.set(-200, 0, 30);
-				  		object.scale.x = object.scale.y = object.scale.z = 15;
+				  		object.scale.x = object.scale.y = object.scale.z = 45;
 			      		scene.add( object );
 			      		obj_Lotso = object;
 					});
@@ -303,8 +303,46 @@
 				var wireMaterial = new THREE.MeshBasicMaterial( { transparent: true,opacity: 0} );
 				MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
 				MovingCube.position.set(-290, 0, -250);
-
 				scene.add( MovingCube );
+
+				var cubeABC = new THREE.CubeGeometry( 45, 45, 45);
+				var material = [
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/A.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}), 
+			    ];
+				var A = new THREE.Mesh( cubeABC, material );
+				A.position.set(0, 10, -215);
+				scene.add(A);
+				ObjetosDeColisao.push(A);
+
+				material = [
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/B.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}), 
+			    ];
+				var B = new THREE.Mesh( cubeABC, material);
+				B.position.set(-45, 10, -230);
+				scene.add(B);
+				ObjetosDeColisao.push(B);
+				material = [
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/C.jpg')}),
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}), 
+			    ];
+				var C = new THREE.Mesh( cubeABC, material );
+				C.position.set(-10, 50, -232);
+				scene.add(C);
+				
 				/*Creating the renderer variable*/
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio(window.devicePixelRatio);
