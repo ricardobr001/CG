@@ -63,11 +63,15 @@
 			var UNITWIDTH = 90;
 			var UNITHEIGHT = 45;
 			var ObjetosDeColisao = [];
+			//var handler = THREE.AnimationHandler.CATMULLROM;
 			var clock = new THREE.Clock();
 
 			var xSpeed = 0.001;
 			var ySpeed = 0.001;
 			var PLAYERCOLLISIONDISTANCE = 5;
+
+
+			var skeleton, mesh;
 
     			init();
     			animate();
@@ -261,15 +265,18 @@
 
 				// Inserção do objeto Bullseye
 
-				var mtlLoader2 = new THREE.MTLLoader();
+				/*loader = new THREE.JSONLoader();
+				loader.load('assets/balaNoAlvo.json', addModel);
+
+				/*var mtlLoader2 = new THREE.MTLLoader();
 				mtlLoader2.setPath('assets/');
-				mtlLoader2.load('Bullseye.mtl', function( materials ){
+				mtlLoader2.load('andando.mtl', function( materials ){
 
 					materials.preload();
 					var objLoader1 = new THREE.OBJLoader();
 					objLoader1.setMaterials( materials );
 					objLoader1.setPath('assets/');
-					objLoader1.load('Bullseye.obj', function( object ){
+					objLoader1.load('andando.obj', function( object ){
 
 							object.position.set(120, 0, -80);
 
@@ -278,7 +285,39 @@
 								obj_Bull = object;
 								obj_Bull.rotation.y += 0.05;
 					});
-				});
+				});*/
+
+				/*new THREE.ObjectLoader().load( 'assets/balaNoAlvo.json', function ( loadedObject ) {
+					loadedObject.traverse( function ( child ) {
+						if ( child instanceof THREE.SkinnedMesh ) {
+							mesh = child;
+						}
+					} );
+
+					if ( mesh === undefined ) {
+						alert( 'Unable to find a SkinnedMesh in this place:\n\n' + 'assets/balaNoAlvo.json' + '\n\n' );
+						return;
+					}
+
+					mesh.rotation.y = - 135 * Math.PI / 180;
+					scene.add( mesh );
+
+					skeleton = new THREE.SkeletonHelper( mesh );
+					skeleton.visible = false;
+					scene.add( skeleton );
+				});*/
+
+				var loader = new THREE.JSONLoader();
+
+				// load a resource
+				loader.load('assets/balaNoAlvo.json', function (geometry, materials){
+						var material = materials[0];
+						var object = new THREE.Mesh(geometry, material);
+						object.position.set(120, 0, -80);
+
+						scene.add(object);
+					}
+				);
 
 				var mtlLoader3 = new THREE.MTLLoader();
 				mtlLoader3.setPath('assets/');
@@ -341,6 +380,18 @@
 				scene.add(controls.getObject());*/
 			}
 
+			function addModel(geometry, materials){
+				materials.forEach(function (mat){
+					mat.skinning = true;
+				});
+
+				bala = new THREE.SkinnedMesh(geometry, new THREEMeshFaceMaterial(materials));
+				walk = new THREE.Animation(bala, geometry.animations[0], handler);
+
+				walk.play();
+				scene.add(bala);
+			}
+
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
@@ -350,8 +401,15 @@
 			function animate() {
 				requestAnimationFrame( animate );
 				move_lotso();
-				moving_woody();
+				//moving_woody();
+				//var delta = clock.getDelta();
+				//THREE.AnimationHandler.update(delta);
+				moving_bull();
 				render();
+			}
+
+			function moving_bull(){
+
 			}
 
 			function detection_colision_woody(){
