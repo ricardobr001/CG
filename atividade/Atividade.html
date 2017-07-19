@@ -58,6 +58,7 @@
 			var obj_Woody;
 			var obj_Lotso;
 			var obj_Ball;
+			var MovingCube;
 			var bezier_curve;
 			var count = 0, flag_lotso = true;
 			var UNITWIDTH = 90;
@@ -65,6 +66,11 @@
 			var ObjetosDeColisao = [];
 			//var handler = THREE.AnimationHandler.CATMULLROM;
 			var clock = new THREE.Clock();
+			// Flags to determine which direction the player is moving
+			var moveForward = false;
+			var moveBackward = false;
+			var moveLeft = false;
+			var moveRight = false;
 
 			var xSpeed = 0.001;
 			var ySpeed = 0.001;
@@ -114,7 +120,7 @@
 
 				/*Creating the camera and positioning it*/
 				camera1 = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
-				/*Using the matrixCamera in the camera*/
+				
 				camera1.position.y = 180; // Height the camera will be looking from
 			    camera1.position.x = 0;
 			    camera1.position.z = 200;
@@ -180,7 +186,7 @@
 			                var sphere = new THREE.Mesh( sphGeo, sphMat );
 
 			                sphere.position.z = (i - totalSphWide / 2) * UNITWIDTH + widthOffset*35;
-			                sphere.position.y = 15;
+			                sphere.position.y = -200;
 			                sphere.position.x = (j - 11) * 20;
 
 			                scene.add(sphere);
@@ -222,26 +228,6 @@
 			dice = new THREE.Mesh( new THREE.BoxGeometry( 950,950,950), materials );
 				dice.position.set(0,0,-400);
 				scene.add( dice );
-
-
-				//Criando cenário
-				/*
-				var loader = new THREE.TextureLoader();
-				var matCaixaCenario = new THREE.MeshPhongMaterial({
-
-					map: loader.load( 'assets/back_toyStory.jpg', function(texture) {
-					    console.log("Textura do cenário carregada");
-					}),
-					side: THREE.BackSide
-				});
-				var geoCaixaCenario = new THREE.BoxGeometry( 70, 70, 1000 );
-				var caixaCenario = new THREE.Mesh( geoCaixaCenario, matCaixaCenario );
-				caixaCenario.position.set(0,0,-100);
-				caixaCenario.doubleSided = true;
-				caixaCenario.receiveShadow = true;
-				scene.add(caixaCenario);
-
-				/*Loading the model*/
 
 				var mtlLoader = new THREE.MTLLoader();
     	    	mtlLoader.setPath('assets/');
@@ -368,6 +354,13 @@
 					});
 				});
 
+				var cubeGeometry = new THREE.CubeGeometry(10,10,10);
+				var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
+				MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
+				MovingCube.position.set(-120, 0, -80);
+				scene.add( MovingCube );
+
+
 				/*Creating the renderer variable*/
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio(window.devicePixelRatio);
@@ -401,7 +394,7 @@
 			function animate() {
 				requestAnimationFrame( animate );
 				move_lotso();
-				//moving_woody();
+				moving_woody();
 				//var delta = clock.getDelta();
 				//THREE.AnimationHandler.update(delta);
 				moving_bull();
@@ -413,40 +406,34 @@
 			}
 
 			function detection_colision_woody(){
-				var originPoint = obj_Woody.position.clone();
-				var rayCaster = new THREE.Raycaster(originPoint);
-
-				/*for (var vertexIndex = 0; vertexIndex < obj_Woody.geometry.vertices.length; vertexIndex++)
-				{
-					var localVertex = obj_Woody.geometry.vertices[vertexIndex].clone();
-					var globalVertex = localVertex.applyMatrix4( obj_Woody.matrix );
-					var directionVector = globalVertex.sub( obj_Woody.position );
-
+				var originPoint = MovingCube.position.clone();
+				
+				for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++)
+				{		
+					var localVertex = MovingCube.geometry.vertices[vertexIndex].clone();
+					var globalVertex = localVertex.applyMatrix4( MovingCube.matrix );
+					var directionVector = globalVertex.sub( MovingCube.position );
+					
 					var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-					var collisionResults = ray.intersectObjects( ObjetosDeColisao );
-					if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() )
-						return false;
-				}*/
-
-				if(rayIntersect(rayCaster, PLAYERCOLLISIONDISTANCE)){
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-
-			/*Function that detect the intersecting ray*/
-			function rayIntersect(ray, distance){
-				var intersects = ray.intersectObjects(ObjetosDeColisao);
-
-				for (var i = 0 ; i < intersects.lenght ; i++){
-					if(intersects[i].distance < distance){
+					var collisionResults = ray.intersectObjects( ObjetosDeColisao);
+					if(collisionResults.length > 0){
+						//console.log(collisionResults[0].distance);
+					}
+					if ( collisionResults.length > 0) {
+						console.log('aqui');
 						return true;
 					}
-				}
+				}	
 
-				return false;
+			/*function isPointInsideSphere(point, sphere) {
+			  	var dx = point.x - sphere.x;
+				var dz = point.z - sphere.z;
+				var distance = Math.sqrt(dx * dx + dz * dz);
+			 
+			  if(distance < 30){
+			  	console.log(distance);
+			  }
+			*/
 			}
 
 			function moving_woody(){
@@ -456,26 +443,37 @@
 					var delta = clock.getDelta();
 					var moveDistance = 100 * delta;
 				    var keyCode = event.which;
-
-					if(detection_colision_woody() == false){
-					    if (keyCode == 83) { //w
+				    
+					    if (keyCode == 83  && !detection_colision_woody()) { //s
 					        obj_Woody.position.z += ySpeed;
-					    } else if (keyCode == 87) { //s
+					     //   obj_Bull.position.z += ySpeed;
+					        MovingCube.position.z = obj_Woody.position.z; 
+					        moveBackward = true; 
+					    } else if (keyCode == 87 && (obj_Woody.position.z> -84.8) && !detection_colision_woody()) { //w
 					        obj_Woody.position.z -= ySpeed;
-					    } else if (keyCode == 65) { //a
+					    //    obj_Bull.position.z -= ySpeed;
+					          MovingCube.position.z = obj_Woody.position.z; 
+					        moveForward = true;
+					      
+					    } else if (keyCode == 65 && obj_Woody.position.x > -124.1 && !detection_colision_woody()) { //a
 					        obj_Woody.position.x -= xSpeed;
-					    } else if (keyCode == 68) {//d
+					    //    obj_Bull.position.x += xSpeed;
+					        MovingCube.position.x = obj_Woody.position.x; 
+					        moveLeft = true;
+					    } else if (keyCode == 68 && obj_Woody.position.x <124.1 && !detection_colision_woody()) {//d
 					        obj_Woody.position.x += xSpeed;
+					   //     obj_Bull.position.x -= xSpeed;
+					          MovingCube.position.x = obj_Woody.position.x; 
+					        moveRight = true;
 					    } else if (keyCode == 32) { //space
 					        obj_Woody.position.set(-120, 0, -80);
+					    //    obj_Bull.position.set(120, 0, -80);
+					          MovingCube.position = obj_Woody.position; 
 					    }
-					}
-					else{
-						//Do nothing
-					}
+					
+					
 				};
 			}
-
 			function move_lotso(){
 				//count = 0;
 				obj_Lotso.position.x = -100 + pontos.vertices[count].x * 10;
