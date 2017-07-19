@@ -72,8 +72,8 @@
 			var moveLeft = false;
 			var moveRight = false;
 
-			var xSpeed = 0.001;
-			var ySpeed = 0.001;
+			var xSpeed = 0.01;
+			var ySpeed = 0.01;
 			var PLAYERCOLLISIONDISTANCE = 5;
 
 
@@ -186,7 +186,7 @@
 			                var sphere = new THREE.Mesh( sphGeo, sphMat );
 
 			                sphere.position.z = (i - totalSphWide / 2) * UNITWIDTH + widthOffset*35;
-			                sphere.position.y = -200;
+			                sphere.position.y = 0;
 			                sphere.position.x = (j - 11) * 20;
 
 			                scene.add(sphere);
@@ -252,9 +252,9 @@
 				// Inserção do objeto Bullseye
 
 				/*loader = new THREE.JSONLoader();
-				loader.load('assets/balaNoAlvo.json', addModel);
+				loader.load('assets/balaNoAlvo.json', addModel);*/
 
-				/*var mtlLoader2 = new THREE.MTLLoader();
+				var mtlLoader2 = new THREE.MTLLoader();
 				mtlLoader2.setPath('assets/');
 				mtlLoader2.load('andando.mtl', function( materials ){
 
@@ -271,7 +271,7 @@
 								obj_Bull = object;
 								obj_Bull.rotation.y += 0.05;
 					});
-				});*/
+				});
 
 				/*new THREE.ObjectLoader().load( 'assets/balaNoAlvo.json', function ( loadedObject ) {
 					loadedObject.traverse( function ( child ) {
@@ -293,7 +293,7 @@
 					scene.add( skeleton );
 				});*/
 
-				var loader = new THREE.JSONLoader();
+				/*var loader = new THREE.JSONLoader();
 
 				// load a resource
 				loader.load('assets/balaNoAlvo.json', function (geometry, materials){
@@ -303,7 +303,7 @@
 
 						scene.add(object);
 					}
-				);
+				);*/
 
 				var mtlLoader3 = new THREE.MTLLoader();
 				mtlLoader3.setPath('assets/');
@@ -406,9 +406,9 @@
 			}
 
 			function detection_colision_woody(){
-				var originPoint = MovingCube.position.clone();
+				var originPoint = MovingCube.clone();
 				
-				for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++)
+				/*for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++)
 				{		
 					var localVertex = MovingCube.geometry.vertices[vertexIndex].clone();
 					var globalVertex = localVertex.applyMatrix4( MovingCube.matrix );
@@ -420,20 +420,32 @@
 						//console.log(collisionResults[0].distance);
 					}
 					if ( collisionResults.length > 0) {
-						console.log('aqui');
+						//console.log('aqui');
 						return true;
 					}
-				}	
+				}*/
+				//alert(originPoint.position.x);
+				for (var i = 0 ; i < ObjetosDeColisao.length ; i++){
+					if(15 > distancePointToPoint(originPoint.position, ObjetosDeColisao[i].position)){
+						return true;
+					}
+				}
 
-			/*function isPointInsideSphere(point, sphere) {
+				return false;	
+			}
+
+			function distancePointToPoint(point, sphere) {
+				//alert(sphere.x);
 			  	var dx = point.x - sphere.x;
 				var dz = point.z - sphere.z;
 				var distance = Math.sqrt(dx * dx + dz * dz);
 			 
-			  if(distance < 30){
+			 //alert(distance);
+				return distance;
+			  /*if(distance < 30){
 			  	console.log(distance);
-			  }
-			*/
+			  }*/
+			
 			}
 
 			function moving_woody(){
@@ -444,34 +456,59 @@
 					var moveDistance = 100 * delta;
 				    var keyCode = event.which;
 				    
-					    if (keyCode == 83  && !detection_colision_woody()) { //s
-					        obj_Woody.position.z += ySpeed;
-					     //   obj_Bull.position.z += ySpeed;
-					        MovingCube.position.z = obj_Woody.position.z; 
-					        moveBackward = true; 
-					    } else if (keyCode == 87 && (obj_Woody.position.z> -84.8) && !detection_colision_woody()) { //w
-					        obj_Woody.position.z -= ySpeed;
-					    //    obj_Bull.position.z -= ySpeed;
-					          MovingCube.position.z = obj_Woody.position.z; 
-					        moveForward = true;
-					      
-					    } else if (keyCode == 65 && obj_Woody.position.x > -124.1 && !detection_colision_woody()) { //a
-					        obj_Woody.position.x -= xSpeed;
-					    //    obj_Bull.position.x += xSpeed;
-					        MovingCube.position.x = obj_Woody.position.x; 
-					        moveLeft = true;
-					    } else if (keyCode == 68 && obj_Woody.position.x <124.1 && !detection_colision_woody()) {//d
-					        obj_Woody.position.x += xSpeed;
-					   //     obj_Bull.position.x -= xSpeed;
-					          MovingCube.position.x = obj_Woody.position.x; 
-					        moveRight = true;
-					    } else if (keyCode == 32) { //space
-					        obj_Woody.position.set(-120, 0, -80);
-					    //    obj_Bull.position.set(120, 0, -80);
-					          MovingCube.position = obj_Woody.position; 
-					    }
-					
-					
+				    if (keyCode == 83  && !detection_colision_woody()) { //s
+				        obj_Woody.position.z += ySpeed;
+				     //   obj_Bull.position.z += ySpeed;
+				        MovingCube.position.z = obj_Woody.position.z; 
+				        moveBackward = true; 
+				    } else if (keyCode == 87 && (obj_Woody.position.z> -84.8) && !detection_colision_woody()) { //w
+				        obj_Woody.position.z -= ySpeed;
+				    //    obj_Bull.position.z -= ySpeed;
+				          MovingCube.position.z = obj_Woody.position.z; 
+				        moveForward = true;
+				      
+				    } else if (keyCode == 65 && obj_Woody.position.x > -124.1 && !detection_colision_woody()) { //a
+				        obj_Woody.position.x -= xSpeed;
+				    //    obj_Bull.position.x += xSpeed;
+				        MovingCube.position.x = obj_Woody.position.x; 
+				        moveLeft = true;
+				    } else if (keyCode == 68 && obj_Woody.position.x <124.1 && !detection_colision_woody()) {//d
+				        obj_Woody.position.x += xSpeed;
+				   //     obj_Bull.position.x -= xSpeed;
+				          MovingCube.position.x = obj_Woody.position.x; 
+				        moveRight = true;
+				    } else if (keyCode == 32) { //space
+				        obj_Woody.position.set(-120, 0, -80);
+				    //    obj_Bull.position.set(120, 0, -80);
+				          MovingCube.position = obj_Woody.position; 
+				    }
+
+				    /*if (keyCode == 83  && 30 < isPointInsideSphere()) { //s
+				        obj_Woody.position.z += ySpeed;
+				     //   obj_Bull.position.z += ySpeed;
+				        MovingCube.position.z = obj_Woody.position.z; 
+				        moveBackward = true; 
+				    } else if (keyCode == 87 && (obj_Woody.position.z> -84.8) && 30 < isPointInsideSphere()) { //w
+				        obj_Woody.position.z -= ySpeed;
+				    //    obj_Bull.position.z -= ySpeed;
+				          MovingCube.position.z = obj_Woody.position.z; 
+				        moveForward = true;
+				      
+				    } else if (keyCode == 65 && obj_Woody.position.x > -124.1 && 30 < isPointInsideSphere()) { //a
+				        obj_Woody.position.x -= xSpeed;
+				    //    obj_Bull.position.x += xSpeed;
+				        MovingCube.position.x = obj_Woody.position.x; 
+				        moveLeft = true;
+				    } else if (keyCode == 68 && obj_Woody.position.x <124.1 && 30 < isPointInsideSphere()) {//d
+				        obj_Woody.position.x += xSpeed;
+				   //     obj_Bull.position.x -= xSpeed;
+				          MovingCube.position.x = obj_Woody.position.x; 
+				        moveRight = true;
+				    } else if (keyCode == 32) { //space
+				        obj_Woody.position.set(-120, 0, -80);
+				    //    obj_Bull.position.set(120, 0, -80);
+				          MovingCube.position = obj_Woody.position; 
+				    }*/								
 				};
 			}
 			function move_lotso(){
