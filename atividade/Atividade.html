@@ -229,59 +229,29 @@
           	});
             	mixer = new THREE.AnimationMixer( scene );
 		var loader = new THREE.JSONLoader();
-				loader.load( 'assets/bala_andando.js', function ( geometry, materials ) {
+				loader.load( 'assets/bala_andando1.js', function ( geometry, materials ) {
 					// adjust color a bit
 
 					var material = materials[ 0 ];
 					material.morphTargets = true;
-					var texture = new THREE.MeshFaceMaterial(materials);
+					//var texture = new THREE.MeshFaceMaterial(materials);
 					
-						var mesh = new THREE.Mesh( geometry, texture );
-						
-						//mesh.position.set( x, 0, z );
+						var mesh = new THREE.Mesh( geometry, materials );
 						
 						mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
-						mesh.position.set( 120, 1, -200 );
+						mesh.position.x = 120;
+						mesh.position.y = 1;
+						mesh.position.z = -200;
 						
 						mesh.matrixAutoUpdate = false;
 						mesh.updateMatrix();
 						scene.add( mesh );
 						mixer.clipAction( geometry.animations[ 0 ], mesh )
-								.setDuration( 1 )			// one second
-								.startAt( - Math.random() )	// random phase (already running)
-								.play();					// let's go
+								.setDuration( 1 )			
+								.startAt( - Math.random() )	
+								.play();					
 					
 				} );
-/*
-new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObject ) {
-				loadedObject.traverse( function ( child ) {
-					if ( child instanceof THREE.SkinnedMesh ) {
-						mesh = child;
-					}
-				} );
-				if ( mesh === undefined ) {
-					alert( 'Unable to find a SkinnedMesh in this place:\n\n' + url + '\n\n' );
-					return;
-				}
-				// Add mesh and skeleton helper to scene
-				/*mesh.position.x = 100;
-				mesh.position.y = 0;
-				mesh.position.z = -200;
-				mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
-				scene.add( mesh );
-				skeleton = new THREE.SkeletonHelper( mesh );
-				skeleton.visible = false;
-				scene.add( skeleton );
-
-				mixer = new THREE.AnimationMixer( mesh );
-				idleAction = mixer.clipAction( 'ArmatureAction');
-
-
-				actions = [ idleAction ];
-				activateAllActions();
-
-			animate1();
-			} );*/
 
 				var mtlLoader3 = new THREE.MTLLoader();
 				mtlLoader3.setPath('assets/');
