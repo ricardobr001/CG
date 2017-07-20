@@ -324,7 +324,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				var cubeGeometry = new THREE.CubeGeometry(10,10,10);
 				var wireMaterial = new THREE.MeshBasicMaterial( { transparent: true,opacity: 0} );
 				MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
-				MovingCube.position.set(-290, 0, -250);
+				MovingCube.position.set(-200, 0, -220);
 				scene.add( MovingCube );
 
 				var cubeABC = new THREE.CubeGeometry( 45, 45, 45);
@@ -507,18 +507,18 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				        MovingCube.position.z = obj_Woody.position.z;
 				       moveBackward = detection_colision_woody(moveBackward);
 
-				    } else if (keyCode == 87 && (obj_Woody.position.z> -250) && !moveForward) { //w
+				    } else if (keyCode == 87 && (obj_Woody.position.z> -230) && !moveForward) { //w
 				        obj_Woody.position.z -= ySpeed;
 				    //    obj_Bull.position.z -= ySpeed;
 				          MovingCube.position.z = obj_Woody.position.z;
 				        moveForward = detection_colision_woody(moveForward);
 
-				    } else if (keyCode == 65 && obj_Woody.position.x > -290 && !moveLeft) { //a
+				    } else if (keyCode == 65 && obj_Woody.position.x > -220 && !moveLeft) { //a
 				        obj_Woody.position.x -= xSpeed;
 				    //    obj_Bull.position.x += xSpeed;
 				        MovingCube.position.x = obj_Woody.position.x;
 				        moveLeft = detection_colision_woody(moveLeft);
-				    } else if (keyCode == 68 && obj_Woody.position.x <290 && !moveRight) {//d
+				    } else if (keyCode == 68 && obj_Woody.position.x < 230&& !moveRight) {//d
 				        obj_Woody.position.x += xSpeed;
 				   //     obj_Bull.position.x -= xSpeed;
 				          MovingCube.position.x = obj_Woody.position.x;
