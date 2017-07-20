@@ -243,6 +243,8 @@
 						mesh.position.y = 1;
 						mesh.position.z = -200;
 						
+					
+						mesh.updateMatrix();
 						scene.add( mesh );
 						
 						mixer.clipAction( geometry.animations[ 0 ], mesh )
@@ -431,7 +433,7 @@
 				    if (keyCode == 83 && !moveBackward) { //s
 				        obj_Woody.position.z += ySpeed;
 				        MovingCube.position.z = obj_Woody.position.z;
-				        mesh.position.z += xSpeed;
+				        mesh.position.x += xSpeed;
 				       moveBackward = detection_colision_woody(moveBackward);
 
 				    } else if (keyCode == 87 && (obj_Woody.position.z> -230) && !moveForward) { //w
