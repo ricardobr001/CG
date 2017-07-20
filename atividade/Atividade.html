@@ -236,21 +236,19 @@
 					material.morphTargets = true;
 					//var texture = new THREE.MeshFaceMaterial(materials);
 					
-						var mesh = new THREE.Mesh( geometry, materials );
+						mesh = new THREE.Mesh( geometry, materials );
 						
 						mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
 						mesh.position.x = 120;
 						mesh.position.y = 1;
 						mesh.position.z = -200;
 						
-						mesh.matrixAutoUpdate = false;
-						mesh.updateMatrix();
 						scene.add( mesh );
+						
 						mixer.clipAction( geometry.animations[ 0 ], mesh )
 								.setDuration( 1 )			
 								.startAt( - Math.random() )	
 								.play();					
-					
 				} );
 
 				var mtlLoader3 = new THREE.MTLLoader();
@@ -384,37 +382,8 @@
 				return false;
 			}
 
-			function animate1() {
-
-
-				idleWeight = idleAction.getEffectiveWeight();
-
-				var mixerUpdateDelta = clock.getDelta()*90000;
-
-				mixer.update( mixerUpdateDelta );
-
-			}
-
 			function detection_colision_woody(direcao){
 				var originPoint = MovingCube.clone();
-
-				/*for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++)
-				{
-					var localVertex = MovingCube.geometry.vertices[vertexIndex].clone();
-					var globalVertex = localVertex.applyMatrix4( MovingCube.matrix );
-					var directionVector = globalVertex.sub( MovingCube.position );
-
-					var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-					var collisionResults = ray.intersectObjects( ObjetosDeColisao);
-					if(collisionResults.length > 0){
-						//console.log(collisionResults[0].distance);
-					}
-					if ( collisionResults.length > 0) {
-						//console.log('aqui');
-						return true;
-					}
-				}*/
-				//alert(originPoint.position.x);
 				if(direcao == moveForward){
 					moveBackward = false;
 					moveLeft = false;
@@ -451,22 +420,7 @@
 				return distance;
 			}
 
-			function activateAllActions() {
-				setWeight( idleAction, settings[ 'modify idle weight' ] );
-
-				actions.forEach( function ( action ) {
-
-					action.play();
-					console.log(action);
-				} );
-			}
-
-			function setWeight( action, weight ) {
-				action.enabled = true;
-				action.setEffectiveTimeScale( 1 );
-				action.setEffectiveWeight( weight );
-			}
-
+	
 			function moving_woody(){
 				document.addEventListener("keydown", onDocumentKeyDown, false);
 				function onDocumentKeyDown(event) {
@@ -476,29 +430,29 @@
 
 				    if (keyCode == 83 && !moveBackward) { //s
 				        obj_Woody.position.z += ySpeed;
-				     //   obj_Bull.position.z += ySpeed;
 				        MovingCube.position.z = obj_Woody.position.z;
+				        mesh.position.z += xSpeed;
 				       moveBackward = detection_colision_woody(moveBackward);
 
 				    } else if (keyCode == 87 && (obj_Woody.position.z> -230) && !moveForward) { //w
 				        obj_Woody.position.z -= ySpeed;
-				    //    obj_Bull.position.z -= ySpeed;
+				        mesh.position.z -= ySpeed;
 				          MovingCube.position.z = obj_Woody.position.z;
 				        moveForward = detection_colision_woody(moveForward);
 
 				    } else if (keyCode == 65 && obj_Woody.position.x > -220 && !moveLeft) { //a
 				        obj_Woody.position.x -= xSpeed;
-				    //    obj_Bull.position.x += xSpeed;
+				        mesh.position.x += xSpeed;
 				        MovingCube.position.x = obj_Woody.position.x;
 				        moveLeft = detection_colision_woody(moveLeft);
 				    } else if (keyCode == 68 && obj_Woody.position.x < 230&& !moveRight) {//d
 				        obj_Woody.position.x += xSpeed;
-				   //     obj_Bull.position.x -= xSpeed;
+				        mesh.position.x -= xSpeed;
 				          MovingCube.position.x = obj_Woody.position.x;
 				        moveRight = detection_colision_woody(moveRight);
 				    } else if (keyCode == 32) { //space
 				        obj_Woody.position.set(-200, 0, -220);
-				    //    obj_Bull.position.set(120, 0, -80);
+				        obj_Bull.position.set(120, 0, -80);
 				          MovingCube.position.set(-200, 0, -220);
 				    }
 
