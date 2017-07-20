@@ -89,10 +89,10 @@
 			function init(){
 				/*Creating the new bezier curve*/
 				bezier_curve = new THREE.CubicBezierCurve3(
-					new THREE.Vector3(-2.4, -1.2, 0),		//Starting point
-					new THREE.Vector3(-3.2, -4, 0),		//First control point
-					new THREE.Vector3(-4, 0, 0),		//Second control point
-					new THREE.Vector3(-4.8, -1.2, 0)			//Ending point
+					new THREE.Vector3(0, 0, 0),		//Starting point
+					new THREE.Vector3(-30, 10, 0),		//First control point
+					new THREE.Vector3(30, 0, 0),		//Second control point
+					new THREE.Vector3(0, 0, 0)			//Ending point
 				);
 				pontos = new THREE.Geometry();
 				pontos.vertices = bezier_curve.getPoints(100);
@@ -382,7 +382,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 			}
 			function animate() {
 				requestAnimationFrame( animate );
-				//move_lotso();
+				move_bolinha();
 				moving_woody();
 				render();
 			}
@@ -541,12 +541,12 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 
 				};
 			}
-			function move_lotso(){
+			function move_bolinha(){
 				//count = 0;
-				obj_Lotso.position.x = -100 + pontos.vertices[count].x * 10;
-				obj_Lotso.position.y = pontos.vertices[count].y * 10;
-				obj_Lotso.position.z = pontos.vertices[count].z * 10;
-				obj_Lotso.rotation.y += 0.05;
+				obj_Ball.position.x = -10 + pontos.vertices[count].x * 10;
+				obj_Ball.position.y = pontos.vertices[count].y * 10;
+				obj_Ball.position.z = -30 + pontos.vertices[count].z * 10;
+				obj_Ball.rotation.y += 0.05;
 				if (count == 99)
 					flag_lotso = false;
 				else if (count == 0)
@@ -556,9 +556,9 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				else
 					count--;
 			}
+
 			function render() {
 				obj_Woody.rotation.y += 0.03;
-				obj_Ball.rotation.x += 0.05;
 
 				/*Getting the value from the button to change the camera*/
 				document.getElementById('ButtonCamera1').onclick = function(){
