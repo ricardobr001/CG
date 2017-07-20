@@ -118,6 +118,7 @@
 				scene = new THREE.Scene();
 				/*Creating the camera and positioning it*/
 				camera1 = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
+				camera = camera1;
 				
 				camera1.position.y = 580; // Height the camera will be looking from
 			    camera1.position.x = 0;
@@ -260,9 +261,9 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 					return;
 				}
 				// Add mesh and skeleton helper to scene
-				mesh.position.x = 0;
+				mesh.position.x = 100;
 				mesh.position.y = 0;
-				mesh.position.z = 0;
+				mesh.position.z = -200;
 				mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
 				scene.add( mesh );
 				skeleton = new THREE.SkeletonHelper( mesh );
@@ -313,7 +314,8 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 					var loader = new THREE.OBJLoader();
 					loader.setMaterials( materials );
 					loader.load('assets/Lotso.obj',	function ( object ) {
-				  		object.position.set(-200, 0, 30);
+				  		object.position.set(-20, 0, -110);
+				  		object.rotation.y += -1.55;
 				  		object.scale.x = object.scale.y = object.scale.z = 45;
 			      		scene.add( object );
 			      		obj_Lotso = object;
@@ -380,12 +382,33 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 			}
 			function animate() {
 				requestAnimationFrame( animate );
-				move_lotso();
+				//move_lotso();
 				moving_woody();
-				//var delta = clock.getDelta();
-				//THREE.AnimationHandler.update(delta);
-				moving_bull();
 				render();
+			}
+
+			function ganhar(){
+				var originPoint = MovingCube.clone();
+				var winPoint = obj_Bull.clone(); //Colocar obj_Bull ou mesh.clone() 
+
+				if(15 > distancePointToPoint(originPoint.position, winPoint.position)){
+					alert("Parabéns, você ganhou!!");
+		          	return true;
+				}
+
+				return false;
+			}
+
+			function perder(){
+				var originPoint = MovingCube.clone();
+				var lossPoint = obj_Lotso.clone();
+
+				if(50 > distancePointToPoint(originPoint.position, lossPoint.position)){
+					alert("Fuja do Lotso, você perdeu!!!");
+		          	return true;
+				}
+
+				return false;
 			}
 
 			function animate1() {
@@ -398,8 +421,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				mixer.update( mixerUpdateDelta );
 				
 			}
-			function moving_bull(){
-			}
+
 			function detection_colision_woody(direcao){
 				var originPoint = MovingCube.clone();
 				
@@ -446,19 +468,16 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				
 				return false;	
 			}
+
 			function distancePointToPoint(point, sphere) {
 				//alert(sphere.x);
 			  	var dx = point.x - sphere.x;
 				var dz = point.z - sphere.z;
 				var distance = Math.sqrt(dx * dx + dz * dz);
 			 
-			 //alert(distance);
-				return distance;
-			  /*if(distance < 30){
-			  	console.log(distance);
-			  }*/
-			
+				return distance;			
 			}
+
 			function activateAllActions() {
 				setWeight( idleAction, settings[ 'modify idle weight' ] );
 				
@@ -509,6 +528,16 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				    //    obj_Bull.position.set(120, 0, -80);
 				          MovingCube.position.set(-290, 0, -250);
 				    }
+
+				    /*if(ganhar()){
+				    	obj_Woody.position.set(-290, 0, -250);
+				    	MovingCube.position.set(-290, 0, -250);
+				    }*/
+
+				    if(perder()){
+				    	obj_Woody.position.set(-290, 0, -250);
+				    	MovingCube.position.set(-290, 0, -250);
+				    }
 				    							
 				};
 			}
@@ -530,6 +559,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 			function render() {
 				obj_Woody.rotation.y += 0.03;
 				obj_Ball.rotation.x += 0.05;
+
 				/*Getting the value from the button to change the camera*/
 				document.getElementById('ButtonCamera1').onclick = function(){
 					camera = camera1;
@@ -538,7 +568,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 					camera = camera2;
 				}
 
-    renderer.render(scene, camera);
+    			renderer.render(scene, camera);
    
 			}
 		</script>
