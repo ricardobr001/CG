@@ -137,9 +137,9 @@
 				directionalLight.position.set(0, 1, 1).normalize();
 				scene.add( directionalLight );
 				/*Criando o labirinto*/
-								var map = [
+					var map = [
 			        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1,],
-			        [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,1,1,1,1,1,],
+			        [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,0,0,1,1,1,],
 			      	[1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,0,0,1,],
 			        [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,0,0,1,1,1,],
 			        [1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,0,0,1,1,],
@@ -239,9 +239,9 @@
 						mesh = new THREE.Mesh( geometry, materials );
 						
 						mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
-						mesh.position.x = 120;
-						mesh.position.y = 1;
-						mesh.position.z = -200;
+						mesh.position.x = 200;
+						mesh.position.y = 0;
+						mesh.position.z = -220;
 						
 					
 						mesh.updateMatrix();
@@ -288,7 +288,7 @@
 					loader.setMaterials( materials );
 					loader.load('assets/Lotso.obj',	function ( object ) {
 				  		object.position.set(40, 0, -110);
-				  		object.rotation.y += -1.55;
+				  		object.rotation.y += -0.39;
 				  		object.scale.x = object.scale.y = object.scale.z = 45;
 			      		scene.add( object );
 			      		obj_Lotso = object;
@@ -310,7 +310,7 @@
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			    ];
 				var A = new THREE.Mesh( cubeABC, material );
-				A.position.set(0, 10, -215);
+				A.position.set(-60, 10, -225);
 				scene.add(A);
 				ObjetosDeColisao.push(A);
 
@@ -323,7 +323,7 @@
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			    ];
 				var B = new THREE.Mesh( cubeABC, material);
-				B.position.set(-45, 10, -230);
+				B.position.set(-100, 10, -230);
 				scene.add(B);
 				ObjetosDeColisao.push(B);
 				material = [
@@ -335,7 +335,7 @@
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			    ];
 				var C = new THREE.Mesh( cubeABC, material );
-				C.position.set(-10, 50, -232);
+				C.position.set(-70, 50, -232);
 				scene.add(C);
 
 				/*Creating the renderer variable*/
@@ -454,7 +454,7 @@
 				        moveRight = detection_colision_woody(moveRight);
 				    } else if (keyCode == 32) { //space
 				        obj_Woody.position.set(-200, 0, -220);
-				        obj_Bull.position.set(120, 0, -80);
+				        mesh.position.set(200, 0, -220);
 				          MovingCube.position.set(-200, 0, -220);
 				    }
 
