@@ -64,6 +64,7 @@
 			var UNITHEIGHT = 45;
 			var ObjetosDeColisao = [];
 			var mixer;
+			
 			//var handler = THREE.AnimationHandler.CATMULLROM;
 			var clock = new THREE.Clock();
 			// Flags to determine which direction the player is moving
@@ -75,6 +76,14 @@
 			var ySpeed = 0.01;
 			var PLAYERCOLLISIONDISTANCE = 5;
 			var skeleton, mesh;
+
+
+			var actions;
+			var settings;
+			settings = {
+					'modify idle weight':    50.0,
+				};
+
     			init();
     			animate();
 			function init(){
@@ -124,7 +133,7 @@
 				var ambient = new THREE.AmbientLight(0x444440);
 				scene.add(ambient);
 				var directionalLight = new THREE.DirectionalLight(0xffeedd);
-				directionalLight.position.set(0, 1, 0).normalize();
+				directionalLight.position.set(0, 1, 1).normalize();
 				scene.add( directionalLight );
 				/*Criando o labirinto*/
 								var map = [
@@ -217,8 +226,8 @@
 			      		obj_Woody = object;
 	                });
             	});
-				// Inserção do objeto Bullseye
-					var loader = new THREE.JSONLoader();
+	/*		// Inserção do objeto Bullseye
+			var loader = new THREE.JSONLoader();
 			 loader.load( "assets/bala_andando.json", addModelToScene );
 	
 		 // After loading JSON from our file, we add it to the scene
@@ -230,6 +239,7 @@
 		   scene.add( model );
 
 		  mixer = new THREE.AnimationMixer(model);
+
    		 idleAction = mixer.clipAction(geometry.animations[0]);
    		 console.log(geometry.animations[0]);
     	
@@ -237,31 +247,38 @@
     	idleAction.play();
     		set = true;
 		 }
-				/*new THREE.ObjectLoader().load( 'assets/balaNoAlvo.json', function ( loadedObject ) {
-					loadedObject.traverse( function ( child ) {
-						if ( child instanceof THREE.SkinnedMesh ) {
-							mesh = child;
-						}
-					} );
-					if ( mesh === undefined ) {
-						alert( 'Unable to find a SkinnedMesh in this place:\n\n' + 'assets/balaNoAlvo.json' + '\n\n' );
-						return;
+*/
+
+new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObject ) {
+				loadedObject.traverse( function ( child ) {
+					if ( child instanceof THREE.SkinnedMesh ) {
+						mesh = child;
 					}
-					mesh.rotation.y = - 135 * Math.PI / 180;
-					scene.add( mesh );
-					skeleton = new THREE.SkeletonHelper( mesh );
-					skeleton.visible = false;
-					scene.add( skeleton );
-				});*/
-				/*var loader = new THREE.JSONLoader();
-				// load a resource
-				loader.load('assets/balaNoAlvo.json', function (geometry, materials){
-						var material = materials[0];
-						var object = new THREE.Mesh(geometry, material);
-						object.position.set(120, 0, -80);
-						scene.add(object);
-					}
-				);*/
+				} );
+				if ( mesh === undefined ) {
+					alert( 'Unable to find a SkinnedMesh in this place:\n\n' + url + '\n\n' );
+					return;
+				}
+				// Add mesh and skeleton helper to scene
+				mesh.position.x = 0;
+				mesh.position.y = 0;
+				mesh.position.z = 0;
+				mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
+				scene.add( mesh );
+				skeleton = new THREE.SkeletonHelper( mesh );
+				skeleton.visible = false;
+				scene.add( skeleton );
+			
+				mixer = new THREE.AnimationMixer( mesh );
+				idleAction = mixer.clipAction( 'ArmatureAction');
+				
+
+				actions = [ idleAction ];
+				activateAllActions();
+				
+			animate1();
+			} );
+
 				var mtlLoader3 = new THREE.MTLLoader();
 				mtlLoader3.setPath('assets/');
 				mtlLoader3.load('LuxoBall.mtl', function( materials ){
@@ -370,6 +387,17 @@
 				moving_bull();
 				render();
 			}
+
+			function animate1() {
+				
+				
+				idleWeight = idleAction.getEffectiveWeight();
+
+				var mixerUpdateDelta = clock.getDelta()*90000;
+				
+				mixer.update( mixerUpdateDelta );
+				
+			}
 			function moving_bull(){
 			}
 			function detection_colision_woody(direcao){
@@ -431,6 +459,22 @@
 			  }*/
 			
 			}
+			function activateAllActions() {
+				setWeight( idleAction, settings[ 'modify idle weight' ] );
+				
+				actions.forEach( function ( action ) {
+					
+					action.play();
+					console.log(action);
+				} );
+			}
+
+			function setWeight( action, weight ) {
+				action.enabled = true;
+				action.setEffectiveTimeScale( 1 );
+				action.setEffectiveWeight( weight );
+			}
+
 			function moving_woody(){
 				document.addEventListener("keydown", onDocumentKeyDown, false);
 				function onDocumentKeyDown(event) {
@@ -493,9 +537,6 @@
 				document.getElementById('ButtonCamera2').onclick = function(){
 					camera = camera2;
 				}
-				if(set) {
-        mixer.update(clock.getDelta());
-    }
 
     renderer.render(scene, camera);
    
