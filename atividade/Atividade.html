@@ -64,6 +64,7 @@
 			var UNITHEIGHT = 45;
 			var ObjetosDeColisao = [];
 			var mixer;
+
 			//var handler = THREE.AnimationHandler.CATMULLROM;
 			var clock = new THREE.Clock();
 			// Flags to determine which direction the player is moving
@@ -75,15 +76,14 @@
 			var ySpeed = 0.01;
 			var PLAYERCOLLISIONDISTANCE = 5;
 			var skeleton, mesh;
-			
+
+
 			var actions;
 			var settings;
-			var idleAction;
-			var walkAction;
-
 			settings = {
-					'modify idle weight':    1.0,
+					'modify idle weight':    50.0,
 				};
+
     			init();
     			animate();
 			function init(){
@@ -119,9 +119,11 @@
 				/*Creating the camera and positioning it*/
 				camera1 = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
 				camera = camera1;
+
 				camera1.position.y = 580; // Height the camera will be looking from
 			    camera1.position.x = 0;
 			    camera1.position.z = 0;
+
 			   	camera1.lookAt(scene.position);
 				/*Utilizaçao de duas cameras */
 				camera2 = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 3000);
@@ -224,34 +226,45 @@
 			      		scene.add( object );
 			      		obj_Woody = object;
 	                });
-            	});
-	/*		// Inserção do objeto Bullseye
-			var loader = new THREE.JSONLoader();
-			 loader.load( "assets/bala_andando.json", addModelToScene );
-		 // After loading JSON from our file, we add it to the scene
-		 function addModelToScene( geometry, materials ) {
-		   var material = new THREE.MeshFaceMaterial(materials);
-		   model = new THREE.Mesh( geometry, material );
-		   model.scale.x = model.scale.y = model.scale.z = 50;
-		   model.position.set(100, 0, -250);
-		   scene.add( model );
-		  mixer = new THREE.AnimationMixer(model);
-   		 idleAction = mixer.clipAction(geometry.animations[0]);
-   		 console.log(geometry.animations[0]);
-    	idleAction.play();
-    		set = true;
-		 }
-*/
+          	});
+            	mixer = new THREE.AnimationMixer( scene );
+		var loader = new THREE.JSONLoader();
+				loader.load( 'assets/bala_andando.js', function ( geometry, materials ) {
+					// adjust color a bit
 
-				new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObject ) {
+					var material = materials[ 0 ];
+					material.morphTargets = true;
+					var texture = new THREE.MeshFaceMaterial(materials);
+					
+						var mesh = new THREE.Mesh( geometry, texture );
+						
+						//mesh.position.set( x, 0, z );
+						
+						mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
+						mesh.position.set( 120, 1, -200 );
+						
+						mesh.matrixAutoUpdate = false;
+						mesh.updateMatrix();
+						scene.add( mesh );
+						mixer.clipAction( geometry.animations[ 0 ], mesh )
+								.setDuration( 1 )			// one second
+								.startAt( - Math.random() )	// random phase (already running)
+								.play();					// let's go
+					
+				} );
+/*
+new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObject ) {
 				loadedObject.traverse( function ( child ) {
 					if ( child instanceof THREE.SkinnedMesh ) {
 						mesh = child;
 					}
 				} );
-				
+				if ( mesh === undefined ) {
+					alert( 'Unable to find a SkinnedMesh in this place:\n\n' + url + '\n\n' );
+					return;
+				}
 				// Add mesh and skeleton helper to scene
-				mesh.position.x = 100;
+				/*mesh.position.x = 100;
 				mesh.position.y = 0;
 				mesh.position.z = -200;
 				mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
@@ -259,21 +272,16 @@
 				skeleton = new THREE.SkeletonHelper( mesh );
 				skeleton.visible = false;
 				scene.add( skeleton );
-			
+
 				mixer = new THREE.AnimationMixer( mesh );
-				
-				//walkAction = mixer.clipAction('walk');
-				idleAction = mixer.clipAction('walk');
+				idleAction = mixer.clipAction( 'ArmatureAction');
 
-				//actions = [ idleAction];
-				//activateAllActions();
-				
-			
-				idleAction.play();
-				mixer.update(clock.getDelta());
 
-			} );
+				actions = [ idleAction ];
+				activateAllActions();
 
+			animate1();
+			} );*/
 
 				var mtlLoader3 = new THREE.MTLLoader();
 				mtlLoader3.setPath('assets/');
@@ -321,6 +329,7 @@
 				MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
 				MovingCube.position.set(-200, 0, -220);
 				scene.add( MovingCube );
+
 				var cubeABC = new THREE.CubeGeometry( 45, 45, 45);
 				var material = [
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
@@ -334,6 +343,7 @@
 				A.position.set(0, 10, -215);
 				scene.add(A);
 				ObjetosDeColisao.push(A);
+
 				material = [
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
@@ -357,6 +367,7 @@
 				var C = new THREE.Mesh( cubeABC, material );
 				C.position.set(-10, 50, -232);
 				scene.add(C);
+
 				/*Creating the renderer variable*/
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio(window.devicePixelRatio);
@@ -366,6 +377,7 @@
 				/*controls = new THREE.PointerLockControls(obj_Woody);
 				scene.add(controls.getObject());*/
 			}
+
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
@@ -377,54 +389,51 @@
 				moving_woody();
 				render();
 			}
+
 			function ganhar(){
 				var originPoint = MovingCube.clone();
 				var winPoint = obj_Bull.clone(); //Colocar obj_Bull ou mesh.clone()
+
 				if(15 > distancePointToPoint(originPoint.position, winPoint.position)){
 					alert("Parabéns, você ganhou!!");
 		          	return true;
 				}
+
 				return false;
 			}
+
 			function perder(){
 				var originPoint = MovingCube.clone();
 				var lossPoint = obj_Lotso.clone();
+
 				if(50 > distancePointToPoint(originPoint.position, lossPoint.position)){
 					alert("Fuja do Lotso, você perdeu!!!");
 		          	return true;
 				}
+
 				return false;
 			}
+
 			function animate1() {
+
+
 				idleWeight = idleAction.getEffectiveWeight();
+
 				var mixerUpdateDelta = clock.getDelta()*90000;
+
 				mixer.update( mixerUpdateDelta );
+
 			}
 
-				function activateAllActions() {
-				setWeight( idleAction, settings[ 'modify idle weight' ] );
-				
-				actions.forEach( function ( action ) {
-					action.startAt(50);
-						console.log(action);
-
-				} );
-			}
-
-
-			function setWeight( action, weight ) {
-				action.enabled = true;
-				action.setEffectiveTimeScale( 1 );
-				action.setEffectiveWeight( weight );
-			}
-			
 			function detection_colision_woody(direcao){
 				var originPoint = MovingCube.clone();
+
 				/*for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++)
 				{
 					var localVertex = MovingCube.geometry.vertices[vertexIndex].clone();
 					var globalVertex = localVertex.applyMatrix4( MovingCube.matrix );
 					var directionVector = globalVertex.sub( MovingCube.position );
+
 					var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
 					var collisionResults = ray.intersectObjects( ObjetosDeColisao);
 					if(collisionResults.length > 0){
@@ -453,48 +462,60 @@
 					moveBackward = false;
 					moveLeft = false;
 				}
+
 				for (var i = 0 ; i < ObjetosDeColisao.length ; i++){
 					if(15 > distancePointToPoint(originPoint.position, ObjetosDeColisao[i].position)){
 						return true;
 					}
 				}
+
 				return false;
 			}
+
 			function distancePointToPoint(point, sphere) {
 				//alert(sphere.x);
 			  	var dx = point.x - sphere.x;
 				var dz = point.z - sphere.z;
 				var distance = Math.sqrt(dx * dx + dz * dz);
+
 				return distance;
 			}
+
 			function activateAllActions() {
 				setWeight( idleAction, settings[ 'modify idle weight' ] );
+
 				actions.forEach( function ( action ) {
+
 					action.play();
 					console.log(action);
 				} );
 			}
+
 			function setWeight( action, weight ) {
 				action.enabled = true;
 				action.setEffectiveTimeScale( 1 );
 				action.setEffectiveWeight( weight );
 			}
+
 			function moving_woody(){
 				document.addEventListener("keydown", onDocumentKeyDown, false);
 				function onDocumentKeyDown(event) {
 					var delta = clock.getDelta();
 					var moveDistance = 100 * delta;
 				    var keyCode = event.which;
+
 				    if (keyCode == 83 && !moveBackward) { //s
 				        obj_Woody.position.z += ySpeed;
 				     //   obj_Bull.position.z += ySpeed;
 				        MovingCube.position.z = obj_Woody.position.z;
 				       moveBackward = detection_colision_woody(moveBackward);
+
 				    } else if (keyCode == 87 && (obj_Woody.position.z> -230) && !moveForward) { //w
 				        obj_Woody.position.z -= ySpeed;
 				    //    obj_Bull.position.z -= ySpeed;
 				          MovingCube.position.z = obj_Woody.position.z;
 				        moveForward = detection_colision_woody(moveForward);
+
 				    } else if (keyCode == 65 && obj_Woody.position.x > -220 && !moveLeft) { //a
 				        obj_Woody.position.x -= xSpeed;
 				    //    obj_Bull.position.x += xSpeed;
@@ -510,14 +531,17 @@
 				    //    obj_Bull.position.set(120, 0, -80);
 				          MovingCube.position.set(-200, 0, -220);
 				    }
+
 				    /*if(ganhar()){
 				    	obj_Woody.position.set(-290, 0, -250);
 				    	MovingCube.position.set(-290, 0, -250);
 				    }*/
+
 				    if(perder()){
 				    	obj_Woody.position.set(-200, 0, -220);
 				    	MovingCube.position.set(-200, 0, -220);
 				    }
+
 				};
 			}
 			function move_bolinha(){
@@ -535,8 +559,10 @@
 				else
 					count--;
 			}
+
 			function render() {
 				obj_Woody.rotation.y += 0.03;
+
 				/*Getting the value from the button to change the camera*/
 				document.getElementById('ButtonCamera1').onclick = function(){
 					camera = camera1;
@@ -544,7 +570,10 @@
 				document.getElementById('ButtonCamera2').onclick = function(){
 					camera = camera2;
 				}
+				mixer.update( clock.getDelta() );
+
     			renderer.render(scene, camera);
+
 			}
 		</script>
 	</body>
