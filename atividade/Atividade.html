@@ -64,7 +64,7 @@
 			var UNITHEIGHT = 45;
 			var ObjetosDeColisao = [];
 			var mixer;
-			
+
 			//var handler = THREE.AnimationHandler.CATMULLROM;
 			var clock = new THREE.Clock();
 			// Flags to determine which direction the player is moving
@@ -119,7 +119,7 @@
 				/*Creating the camera and positioning it*/
 				camera1 = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
 				camera = camera1;
-				
+
 				camera1.position.y = 580; // Height the camera will be looking from
 			    camera1.position.x = 0;
 			    camera1.position.z = 0;
@@ -219,7 +219,7 @@
 	                objLoader.setPath('assets/');
 	                objLoader.load('Woody.obj', function (object) {
 						/*Applying the woody matrix in woody obj*/
-						object.position.set(-290, 0, -250);
+						object.position.set(-200, 0, -220);
 	                	object.scale.x = object.scale.y = object.scale.z = 50;
 	                	//object.applyMatrix(matrixWoody);
 	                    object.rotation.x = -50;
@@ -230,7 +230,7 @@
 	/*		// Inserção do objeto Bullseye
 			var loader = new THREE.JSONLoader();
 			 loader.load( "assets/bala_andando.json", addModelToScene );
-	
+
 		 // After loading JSON from our file, we add it to the scene
 		 function addModelToScene( geometry, materials ) {
 		   var material = new THREE.MeshFaceMaterial(materials);
@@ -243,8 +243,8 @@
 
    		 idleAction = mixer.clipAction(geometry.animations[0]);
    		 console.log(geometry.animations[0]);
-    	
-    	
+
+
     	idleAction.play();
     		set = true;
 		 }
@@ -269,14 +269,14 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				skeleton = new THREE.SkeletonHelper( mesh );
 				skeleton.visible = false;
 				scene.add( skeleton );
-			
+
 				mixer = new THREE.AnimationMixer( mesh );
 				idleAction = mixer.clipAction( 'ArmatureAction');
-				
+
 
 				actions = [ idleAction ];
 				activateAllActions();
-				
+
 			animate1();
 			} );
 
@@ -334,7 +334,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/A.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}), 
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			    ];
 				var A = new THREE.Mesh( cubeABC, material );
 				A.position.set(0, 10, -215);
@@ -347,7 +347,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/B.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}), 
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			    ];
 				var B = new THREE.Mesh( cubeABC, material);
 				B.position.set(-45, 10, -230);
@@ -359,12 +359,12 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/C.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}), 
+			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			    ];
 				var C = new THREE.Mesh( cubeABC, material );
 				C.position.set(-10, 50, -232);
 				scene.add(C);
-				
+
 				/*Creating the renderer variable*/
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio(window.devicePixelRatio);
@@ -374,7 +374,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				/*controls = new THREE.PointerLockControls(obj_Woody);
 				scene.add(controls.getObject());*/
 			}
-			
+
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
@@ -389,7 +389,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 
 			function ganhar(){
 				var originPoint = MovingCube.clone();
-				var winPoint = obj_Bull.clone(); //Colocar obj_Bull ou mesh.clone() 
+				var winPoint = obj_Bull.clone(); //Colocar obj_Bull ou mesh.clone()
 
 				if(15 > distancePointToPoint(originPoint.position, winPoint.position)){
 					alert("Parabéns, você ganhou!!");
@@ -412,25 +412,25 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 			}
 
 			function animate1() {
-				
-				
+
+
 				idleWeight = idleAction.getEffectiveWeight();
 
 				var mixerUpdateDelta = clock.getDelta()*90000;
-				
+
 				mixer.update( mixerUpdateDelta );
-				
+
 			}
 
 			function detection_colision_woody(direcao){
 				var originPoint = MovingCube.clone();
-				
+
 				/*for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++)
-				{		
+				{
 					var localVertex = MovingCube.geometry.vertices[vertexIndex].clone();
 					var globalVertex = localVertex.applyMatrix4( MovingCube.matrix );
 					var directionVector = globalVertex.sub( MovingCube.position );
-					
+
 					var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
 					var collisionResults = ray.intersectObjects( ObjetosDeColisao);
 					if(collisionResults.length > 0){
@@ -459,14 +459,14 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 					moveBackward = false;
 					moveLeft = false;
 				}
-				 
+
 				for (var i = 0 ; i < ObjetosDeColisao.length ; i++){
 					if(15 > distancePointToPoint(originPoint.position, ObjetosDeColisao[i].position)){
 						return true;
 					}
 				}
-				
-				return false;	
+
+				return false;
 			}
 
 			function distancePointToPoint(point, sphere) {
@@ -474,15 +474,15 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 			  	var dx = point.x - sphere.x;
 				var dz = point.z - sphere.z;
 				var distance = Math.sqrt(dx * dx + dz * dz);
-			 
-				return distance;			
+
+				return distance;
 			}
 
 			function activateAllActions() {
 				setWeight( idleAction, settings[ 'modify idle weight' ] );
-				
+
 				actions.forEach( function ( action ) {
-					
+
 					action.play();
 					console.log(action);
 				} );
@@ -500,33 +500,33 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 					var delta = clock.getDelta();
 					var moveDistance = 100 * delta;
 				    var keyCode = event.which;
-				    
+
 				    if (keyCode == 83 && !moveBackward) { //s
 				        obj_Woody.position.z += ySpeed;
 				     //   obj_Bull.position.z += ySpeed;
-				        MovingCube.position.z = obj_Woody.position.z; 
+				        MovingCube.position.z = obj_Woody.position.z;
 				       moveBackward = detection_colision_woody(moveBackward);
-				    
+
 				    } else if (keyCode == 87 && (obj_Woody.position.z> -250) && !moveForward) { //w
 				        obj_Woody.position.z -= ySpeed;
 				    //    obj_Bull.position.z -= ySpeed;
-				          MovingCube.position.z = obj_Woody.position.z; 
+				          MovingCube.position.z = obj_Woody.position.z;
 				        moveForward = detection_colision_woody(moveForward);
-				      
+
 				    } else if (keyCode == 65 && obj_Woody.position.x > -290 && !moveLeft) { //a
 				        obj_Woody.position.x -= xSpeed;
 				    //    obj_Bull.position.x += xSpeed;
-				        MovingCube.position.x = obj_Woody.position.x; 
+				        MovingCube.position.x = obj_Woody.position.x;
 				        moveLeft = detection_colision_woody(moveLeft);
 				    } else if (keyCode == 68 && obj_Woody.position.x <290 && !moveRight) {//d
 				        obj_Woody.position.x += xSpeed;
 				   //     obj_Bull.position.x -= xSpeed;
-				          MovingCube.position.x = obj_Woody.position.x; 
+				          MovingCube.position.x = obj_Woody.position.x;
 				        moveRight = detection_colision_woody(moveRight);
 				    } else if (keyCode == 32) { //space
-				        obj_Woody.position.set(-290, 0, -250);
+				        obj_Woody.position.set(-200, 0, -220);
 				    //    obj_Bull.position.set(120, 0, -80);
-				          MovingCube.position.set(-290, 0, -250);
+				          MovingCube.position.set(-200, 0, -220);
 				    }
 
 				    /*if(ganhar()){
@@ -535,10 +535,10 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				    }*/
 
 				    if(perder()){
-				    	obj_Woody.position.set(-290, 0, -250);
-				    	MovingCube.position.set(-290, 0, -250);
+				    	obj_Woody.position.set(-200, 0, -220);
+				    	MovingCube.position.set(-200, 0, -220);
 				    }
-				    							
+
 				};
 			}
 			function move_lotso(){
@@ -569,7 +569,7 @@ new THREE.ObjectLoader().load( 'assets/bala_andando.json', function ( loadedObje
 				}
 
     			renderer.render(scene, camera);
-   
+
 			}
 		</script>
 	</body>
