@@ -63,6 +63,7 @@
 			var UNITWIDTH = 90;
 			var UNITHEIGHT = 45;
 			var ObjetosDeColisao = [];
+			var mixer;
 			//var handler = THREE.AnimationHandler.CATMULLROM;
 			var clock = new THREE.Clock();
 			// Flags to determine which direction the player is moving
@@ -217,23 +218,25 @@
 	                });
             	});
 				// Inserção do objeto Bullseye
-				/*loader = new THREE.JSONLoader();
-				loader.load('assets/balaNoAlvo.json', addModel);*/
-				var mtlLoader2 = new THREE.MTLLoader();
-				mtlLoader2.setPath('assets/');
-				mtlLoader2.load('andando.mtl', function( materials ){
-					materials.preload();
-					var objLoader1 = new THREE.OBJLoader();
-					objLoader1.setMaterials( materials );
-					objLoader1.setPath('assets/');
-					objLoader1.load('andando.obj', function( object ){
-							object.position.set(120, 0, -80);
-								scene.add( object );
-								object.scale.x = object.scale.y = object.scale.z = 20;
-								obj_Bull = object;
-								obj_Bull.rotation.y += 0.05;
-					});
-				});
+					var loader = new THREE.JSONLoader();
+			 loader.load( "assets/bala_andando.json", addModelToScene );
+	
+		 // After loading JSON from our file, we add it to the scene
+		 function addModelToScene( geometry, materials ) {
+		   var material = new THREE.MeshFaceMaterial(materials);
+		   model = new THREE.Mesh( geometry, material );
+		   model.scale.x = model.scale.y = model.scale.z = 50;
+		   model.position.set(100, 0, -250);
+		   scene.add( model );
+
+		  mixer = new THREE.AnimationMixer(model);
+   		 idleAction = mixer.clipAction(geometry.animations[0]);
+   		 console.log(geometry.animations[0]);
+    	
+    	
+    	idleAction.play();
+    		set = true;
+		 }
 				/*new THREE.ObjectLoader().load( 'assets/balaNoAlvo.json', function ( loadedObject ) {
 					loadedObject.traverse( function ( child ) {
 						if ( child instanceof THREE.SkinnedMesh ) {
@@ -352,15 +355,7 @@
 				/*controls = new THREE.PointerLockControls(obj_Woody);
 				scene.add(controls.getObject());*/
 			}
-			function addModel(geometry, materials){
-				materials.forEach(function (mat){
-					mat.skinning = true;
-				});
-				bala = new THREE.SkinnedMesh(geometry, new THREEMeshFaceMaterial(materials));
-				walk = new THREE.Animation(bala, geometry.animations[0], handler);
-				walk.play();
-				scene.add(bala);
-			}
+			
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
@@ -498,7 +493,12 @@
 				document.getElementById('ButtonCamera2').onclick = function(){
 					camera = camera2;
 				}
-				renderer.render(scene, camera);
+				if(set) {
+        mixer.update(clock.getDelta());
+    }
+
+    renderer.render(scene, camera);
+   
 			}
 		</script>
 	</body>
