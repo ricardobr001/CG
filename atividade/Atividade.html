@@ -433,7 +433,7 @@
 				    if (keyCode == 83 && !moveBackward) { //s
 				        obj_Woody.position.z += ySpeed;
 				        MovingCube.position.z = obj_Woody.position.z;
-				        mesh.position.x += xSpeed;
+				        mesh.position.z += xSpeed;
 				       moveBackward = detection_colision_woody(moveBackward);
 
 				    } else if (keyCode == 87 && (obj_Woody.position.z> -230) && !moveForward) { //w
