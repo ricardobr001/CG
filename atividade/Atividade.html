@@ -194,7 +194,12 @@
 				    var sphere = new THREE.Mesh(sphGeo, sphMat);
 				    sphere.position.x = -20;
 				    sphere.position.y = 0;
-				    sphere.position.z = i * 25;
+				    if(i == 1){
+				    	sphere.position.z = 28;
+				    }else{
+				    	sphere.position.z = i * 26;
+				    }
+				    
 
 				    scene.add(sphere);
 				    ObjetosDeColisao.push(sphere);
@@ -320,7 +325,7 @@
 					loader.setMaterials( materials );
 
 					loader.load('assets/Lotso.obj',	function ( object ) {
-				  		object.position.set(40, 0, -110);
+				  		object.position.set(30, 0, -110);
 				  		object.rotation.y += -0.39;
 				  		object.scale.x = object.scale.y = object.scale.z = 45;
 
@@ -401,9 +406,11 @@
 
 			function ganhar(){
 				var originPoint = MovingCube.clone();
-				var winPoint = obj_Bull.clone(); //Colocar obj_Bull ou mesh.clone()
+				var winPoint = mesh.clone();
 
 				if(15 > distancePointToPoint(originPoint.position, winPoint.position)){
+					console.log(originPoint.position);
+					console.log(winPoint.position);
 					alert("Parabéns, você ganhou!!");
 		          	return true;
 				}
@@ -412,11 +419,11 @@
 			}
 
 			function perder(){
-				var originPoint = MovingCube.clone();
+				var originPoint = mesh.clone();
 				var lossPoint = obj_Lotso.clone();
 
 				if(50 > distancePointToPoint(originPoint.position, lossPoint.position)){
-					alert("Fuja do Lotso, você perdeu!!!");
+					alert("Poxa, você encontrou o Lotso! Game Over");
 		          	return true;
 				}
 
@@ -427,7 +434,7 @@
 				var originPoint = obj_Woody.clone();
 				var ballPoint = obj_Ball.clone();
 
-				if(50 > distancePointToPoint(originPoint.position, ballPoint.position)){
+				if(30 > distancePointToPoint(originPoint.position, ballPoint.position)){
 					alert("Melhor tomar cuidado com a bola!!");
 		          	return true;
 				}
@@ -437,6 +444,7 @@
 
 			function detection_colision_woody(direcao){
 				var originPoint = MovingCube.clone();
+
 				if(direcao == moveForward){
 					moveBackward = false;
 					moveLeft = false;
@@ -508,10 +516,11 @@
 				        MovingCube.position.set(-200, 0, -220);
 				    }
 
-				    /*if(ganhar()){
-				    	obj_Woody.position.set(-290, 0, -250);
-				    	MovingCube.position.set(-290, 0, -250);
-				    }*/
+				    if(ganhar()){
+				    	obj_Woody.position.set(-200, 0, -220);
+				    	MovingCube.position.set(-200, 0, -220);
+				    	mesh.position.set(200, 0, -220);
+				    }
 
 				    if(colisaoBola()){
 						obj_Woody.position.set(-200, 0, -220);
