@@ -46,8 +46,6 @@
 			}
     	</script>
 
-		<button id= "ButtonCamera1">Camera 1</button>
-		<button id= "ButtonCamera2">Camera 2</button>
 		<script>
 			/*Declaring variables*/
 			var container, stats;
@@ -199,7 +197,7 @@
 				    }else{
 				    	sphere.position.z = i * 26;
 				    }
-				    
+
 
 				    scene.add(sphere);
 				    ObjetosDeColisao.push(sphere);
@@ -259,27 +257,27 @@
             	mixer = new THREE.AnimationMixer(scene);
 				var loader = new THREE.JSONLoader();
 				loader.load( 'assets/bala_andando1.js', function ( geometry, materials ) {
-					
+
 					// adjust color a bit
 					var material = materials[ 0 ];
 					material.morphTargets = true;
 
 					//var texture = new THREE.MeshFaceMaterial(materials);
-					
+
 						mesh = new THREE.Mesh( geometry, materials );
-						
+
 						mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
 						mesh.position.x = 200;
 						mesh.position.y = 0;
-						mesh.position.z = -220;						
-					
+						mesh.position.z = -220;
+
 						mesh.updateMatrix();
 						scene.add(mesh);
-						
+
 						mixer.clipAction(geometry.animations[ 0 ], mesh)
-								.setDuration( 1 )			
-								.startAt(- Math.random())	
-								.play();					
+								.setDuration( 1 )
+								.startAt(- Math.random())
+								.play();
 				});
 
 				/*Loading LuxoBall*/
@@ -479,7 +477,7 @@
 
 				return distance;
 			}
-	
+
 			function moving_woody(){
 				document.addEventListener("keydown", onDocumentKeyDown, false);
 				function onDocumentKeyDown(event) {
@@ -515,6 +513,12 @@
 				        mesh.position.set(200, 0, -220);
 				        MovingCube.position.set(-200, 0, -220);
 				    }
+						else if (keyCode == 49){
+								camera = camera1;
+						}
+						else if (keyCode == 50){
+								camera = camera2;
+						}
 
 				    if(ganhar()){
 				    	obj_Woody.position.set(-200, 0, -220);
@@ -525,13 +529,13 @@
 				    if(colisaoBola()){
 						obj_Woody.position.set(-200, 0, -220);
 				    	MovingCube.position.set(-200, 0, -220);
-				    	mesh.position.set(200, 0, -220);				    
+				    	mesh.position.set(200, 0, -220);
 				    }
 
 				    if(perder()){
 				    	obj_Woody.position.set(-200, 0, -220);
 				    	MovingCube.position.set(-200, 0, -220);
-				    	mesh.position.set(200, 0, -220);				    
+				    	mesh.position.set(200, 0, -220);
 				    }
 
 				};
@@ -555,12 +559,6 @@
 				obj_Woody.rotation.y += 0.03;
 
 				/*Getting the value from the button to change the camera*/
-				document.getElementById('ButtonCamera1').onclick = function(){
-					camera = camera1;
-				}
-				document.getElementById('ButtonCamera2').onclick = function(){
-					camera = camera2;
-				}
 				mixer.update( clock.getDelta() );
 
     			renderer.render(scene, camera);
