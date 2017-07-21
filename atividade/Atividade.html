@@ -103,6 +103,7 @@
        				0,  0,  1,  0,
        				0,  0,  0,  1
        			);
+
 				/*Creating the camera matrix*/
 				matrixCamera = new THREE.Matrix4();
 				matrixCamera.set(
@@ -111,11 +112,14 @@
 					0, 0, 1, 100,
 				 	0, 0, 0, 1
 				);
+
 				/*Creating the Container*/
 				container = document.createElement('div');
 				document.body.appendChild(container);
+
 				/*Creating the Scene*/
 				scene = new THREE.Scene();
+
 				/*Creating the camera and positioning it*/
 				camera1 = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
 				camera = camera1;
@@ -130,14 +134,16 @@
 				camera2.position.z = 480;
 				camera2.position.y = 200;
 				camera2.lookAt(new THREE.Vector3(0,0,0));
+
 				/*Creating the ambient, light and adding it to the scene*/
 				var ambient = new THREE.AmbientLight(0x444440);
 				scene.add(ambient);
 				var directionalLight = new THREE.DirectionalLight(0xffeedd);
 				directionalLight.position.set(0, 1, 1).normalize();
 				scene.add( directionalLight );
+
 				/*Criando o labirinto*/
-					var map = [
+				var map = [
 			        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1,],
 			        [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,0,0,1,1,1,],
 			      	[1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,0,0,1,],
@@ -166,8 +172,9 @@
 				var sphMat = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 			    var widthOffset = UNITWIDTH / 5;
 			    var heightOffset = UNITHEIGHT / 5;
-			   var totalSphWide = map[0].length;
-			   /*Adding spheres where value is 1*/
+			   	var totalSphWide = map[0].length;
+
+			   	/*Adding spheres where value is 1*/
 			    for (var i = 0; i < totalSphWide; i++) {
 			        for (var j = 0; j < map[i].length; j++) {
 			            if (map[i][j]) {
@@ -181,35 +188,50 @@
 			            }
 			        }
 			    }
-				 var materials = [
-		       new THREE.MeshLambertMaterial({
-		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
-		           side: THREE.BackSide
-		       }),
-		       new THREE.MeshLambertMaterial({
-		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
-		           side: THREE.BackSide
-		       }),
-		       new THREE.MeshLambertMaterial({
-		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
-		           side: THREE.BackSide
-		       }),
-		       new THREE.MeshLambertMaterial({
-		           map: THREE.ImageUtils.loadTexture('assets/chao.jpg'),
-		           side: THREE.BackSide
-		       }),
-		       new THREE.MeshLambertMaterial({
-		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
-		           side: THREE.BackSide
-		       }),
-		       new THREE.MeshLambertMaterial({
-		           map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
-		           side: THREE.BackSide
-		       })
-		    ];
-			dice = new THREE.Mesh( new THREE.BoxGeometry( 950,950,950), materials );
+
+			    /*Adding extra spheres*/
+			    for (i = 1 ; i < 4 ; i++){
+				    var sphere = new THREE.Mesh(sphGeo, sphMat);
+				    sphere.position.x = -20;
+				    sphere.position.y = 0;
+				    sphere.position.z = i * 25;
+
+				    scene.add(sphere);
+				    ObjetosDeColisao.push(sphere);
+				}
+
+			 	var materials = [
+			       	new THREE.MeshLambertMaterial({
+			      	    map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+			           	side: THREE.BackSide
+			       	}),
+			       	new THREE.MeshLambertMaterial({
+			           	map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+			           	side: THREE.BackSide
+			       	}),
+			       	new THREE.MeshLambertMaterial({
+			           	map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+			           	side: THREE.BackSide
+			       	}),
+			       	new THREE.MeshLambertMaterial({
+			           	map: THREE.ImageUtils.loadTexture('assets/chao.jpg'),
+			           	side: THREE.BackSide
+			       	}),
+			       	new THREE.MeshLambertMaterial({
+			           	map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+			           	side: THREE.BackSide
+			       	}),
+			       	new THREE.MeshLambertMaterial({
+			           	map: THREE.ImageUtils.loadTexture('assets/back_toyStory.jpg'),
+			           	side: THREE.BackSide
+			       	})
+		    	];
+
+				dice = new THREE.Mesh( new THREE.BoxGeometry( 950,950,950), materials );
 				dice.position.set(0,400,-100);
 				scene.add( dice );
+
+				/*Loading woody*/
 				var mtlLoader = new THREE.MTLLoader();
     	    	mtlLoader.setPath('assets/');
             	mtlLoader.load('Woody.mtl', function (materials) {
@@ -226,14 +248,17 @@
 			      		scene.add( object );
 			      		obj_Woody = object;
 	                });
-          	});
-            	mixer = new THREE.AnimationMixer( scene );
-		var loader = new THREE.JSONLoader();
-				loader.load( 'assets/bala_andando1.js', function ( geometry, materials ) {
-					// adjust color a bit
+          		});
 
+          		/*Loading Bullseye*/
+            	mixer = new THREE.AnimationMixer(scene);
+				var loader = new THREE.JSONLoader();
+				loader.load( 'assets/bala_andando1.js', function ( geometry, materials ) {
+					
+					// adjust color a bit
 					var material = materials[ 0 ];
 					material.morphTargets = true;
+
 					//var texture = new THREE.MeshFaceMaterial(materials);
 					
 						mesh = new THREE.Mesh( geometry, materials );
@@ -241,99 +266,115 @@
 						mesh.scale.x = mesh.scale.y = mesh.scale.z = 50;
 						mesh.position.x = 200;
 						mesh.position.y = 0;
-						mesh.position.z = -220;
-						
+						mesh.position.z = -220;						
 					
 						mesh.updateMatrix();
-						scene.add( mesh );
+						scene.add(mesh);
 						
-						mixer.clipAction( geometry.animations[ 0 ], mesh )
+						mixer.clipAction(geometry.animations[ 0 ], mesh)
 								.setDuration( 1 )			
-								.startAt( - Math.random() )	
+								.startAt(- Math.random())	
 								.play();					
-				} );
+				});
 
+				/*Loading LuxoBall*/
 				var mtlLoader3 = new THREE.MTLLoader();
 				mtlLoader3.setPath('assets/');
 				mtlLoader3.load('LuxoBall.mtl', function( materials ){
 					materials.preload();
+
 					var objLoader2 = new THREE.OBJLoader();
 					objLoader2.setMaterials( materials );
 					objLoader2.setPath('assets/');
+
 					objLoader2.load('LuxoBall.obj', function( object ){
 						var BallMaterial = new THREE.ShaderMaterial({
 							uniforms: {
 								time: { value: 1.0 },
 								resolution: { value: new THREE.Vector2() }
 							},
+
 				   			vertexShader: document.getElementById('vertex').innerHTML,
 				   			fragmentShader: document.getElementById('fragment').innerHTML
 						});
+
 						object.traverse( function ( child ) {
 				        	if ( child instanceof THREE.Mesh ) {
 				            	child.material = BallMaterial;
 				        	}
 				    	});
+
 				  		object.position.set(-0.3, -0.0, 0);
 				  		object.scale.x = object.scale.y = object.scale.z = 200;
 			      		scene.add( object );
 			      		obj_Ball = object;
 					});
 				});
+
+				/*loading Lotso*/
 				var mtlLoader1 = new THREE.MTLLoader();
 				mtlLoader1.setPath('assets/');
 				mtlLoader1.load('Lotso.mtl', function( materials ){
 					materials.preload();
 					var loader = new THREE.OBJLoader();
 					loader.setMaterials( materials );
+
 					loader.load('assets/Lotso.obj',	function ( object ) {
 				  		object.position.set(40, 0, -110);
 				  		object.rotation.y += -0.39;
 				  		object.scale.x = object.scale.y = object.scale.z = 45;
+
 			      		scene.add( object );
 			      		obj_Lotso = object;
 					});
 				});
+
+				/*Creating a cube in the same position of woody*/
 				var cubeGeometry = new THREE.CubeGeometry(10,10,10);
 				var wireMaterial = new THREE.MeshBasicMaterial( { transparent: true,opacity: 0} );
 				MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
 				MovingCube.position.set(-200, 0, -220);
-				scene.add( MovingCube );
+				scene.add(MovingCube);
 
+				/*Loading cubes ABC*/
 				var cubeABC = new THREE.CubeGeometry( 45, 45, 45);
 				var material = [
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/A.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+				    new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+				    new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+				    new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+				    new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+				    new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/A.jpg')}),
+				    new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			    ];
+
 				var A = new THREE.Mesh( cubeABC, material );
 				A.position.set(-60, 10, -225);
 				scene.add(A);
 				ObjetosDeColisao.push(A);
 
 				material = [
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/B.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/B.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			    ];
+
 				var B = new THREE.Mesh( cubeABC, material);
 				B.position.set(-100, 10, -230);
 				scene.add(B);
 				ObjetosDeColisao.push(B);
+
 				material = [
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/C.jpg')}),
-			      new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/C.jpg')}),
+			        new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('assets/image.jpg')}),
 			    ];
+
 				var C = new THREE.Mesh( cubeABC, material );
 				C.position.set(-70, 50, -232);
 				scene.add(C);
@@ -344,8 +385,6 @@
 				renderer.setSize(window.innerWidth, window.innerHeight);
 				container.appendChild(renderer.domElement);
 				window.addEventListener('resize', onWindowResize, false);
-				/*controls = new THREE.PointerLockControls(obj_Woody);
-				scene.add(controls.getObject());*/
 			}
 
 			function onWindowResize() {
@@ -384,6 +423,18 @@
 				return false;
 			}
 
+			function colisaoBola(){
+				var originPoint = obj_Woody.clone();
+				var ballPoint = obj_Ball.clone();
+
+				if(50 > distancePointToPoint(originPoint.position, ballPoint.position)){
+					alert("Melhor tomar cuidado com a bola!!");
+		          	return true;
+				}
+
+				return false;
+			}
+
 			function detection_colision_woody(direcao){
 				var originPoint = MovingCube.clone();
 				if(direcao == moveForward){
@@ -414,14 +465,12 @@
 			}
 
 			function distancePointToPoint(point, sphere) {
-				//alert(sphere.x);
 			  	var dx = point.x - sphere.x;
 				var dz = point.z - sphere.z;
 				var distance = Math.sqrt(dx * dx + dz * dz);
 
 				return distance;
 			}
-
 	
 			function moving_woody(){
 				document.addEventListener("keydown", onDocumentKeyDown, false);
@@ -434,12 +483,12 @@
 				        obj_Woody.position.z += ySpeed;
 				        MovingCube.position.z = obj_Woody.position.z;
 				        mesh.position.z += xSpeed;
-				       moveBackward = detection_colision_woody(moveBackward);
+				       	moveBackward = detection_colision_woody(moveBackward);
 
 				    } else if (keyCode == 87 && (obj_Woody.position.z> -230) && !moveForward) { //w
 				        obj_Woody.position.z -= ySpeed;
 				        mesh.position.z -= ySpeed;
-				          MovingCube.position.z = obj_Woody.position.z;
+				        MovingCube.position.z = obj_Woody.position.z;
 				        moveForward = detection_colision_woody(moveForward);
 
 				    } else if (keyCode == 65 && obj_Woody.position.x > -220 && !moveLeft) { //a
@@ -450,12 +499,13 @@
 				    } else if (keyCode == 68 && obj_Woody.position.x < 230&& !moveRight) {//d
 				        obj_Woody.position.x += xSpeed;
 				        mesh.position.x -= xSpeed;
-				          MovingCube.position.x = obj_Woody.position.x;
+				        MovingCube.position.x = obj_Woody.position.x;
 				        moveRight = detection_colision_woody(moveRight);
+
 				    } else if (keyCode == 32) { //space
 				        obj_Woody.position.set(-200, 0, -220);
 				        mesh.position.set(200, 0, -220);
-				          MovingCube.position.set(-200, 0, -220);
+				        MovingCube.position.set(-200, 0, -220);
 				    }
 
 				    /*if(ganhar()){
@@ -463,15 +513,21 @@
 				    	MovingCube.position.set(-290, 0, -250);
 				    }*/
 
+				    if(colisaoBola()){
+						obj_Woody.position.set(-200, 0, -220);
+				    	MovingCube.position.set(-200, 0, -220);
+				    	mesh.position.set(200, 0, -220);				    
+				    }
+
 				    if(perder()){
 				    	obj_Woody.position.set(-200, 0, -220);
 				    	MovingCube.position.set(-200, 0, -220);
+				    	mesh.position.set(200, 0, -220);				    
 				    }
 
 				};
 			}
 			function move_bolinha(){
-				//count = 0;
 				obj_Ball.position.x = -10 + pontos.vertices[count].x * 10;
 				obj_Ball.position.y = pontos.vertices[count].y * 10;
 				obj_Ball.position.z = -30 + pontos.vertices[count].z * 10;
