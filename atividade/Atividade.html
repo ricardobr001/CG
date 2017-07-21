@@ -48,7 +48,7 @@
 
 		<script>
 			/*Declaring variables*/
-			var container, stats;
+			var container;
 			var camera2, scene, renderer;
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
@@ -73,10 +73,7 @@
 			var xSpeed = 0.01;
 			var ySpeed = 0.01;
 			var PLAYERCOLLISIONDISTANCE = 5;
-			var skeleton, mesh;
-
-
-			var actions;
+			var mesh;
 			var settings;
 			settings = {
 					'modify idle weight':    50.0,
@@ -246,7 +243,7 @@
 						/*Applying the woody matrix in woody obj*/
 						object.position.set(-200, 0, -220);
 	                	object.scale.x = object.scale.y = object.scale.z = 50;
-	                	//object.applyMatrix(matrixWoody);
+
 	                    object.rotation.x = -50;
 			      		scene.add( object );
 			      		obj_Woody = object;
@@ -261,8 +258,6 @@
 					// adjust color a bit
 					var material = materials[ 0 ];
 					material.morphTargets = true;
-
-					//var texture = new THREE.MeshFaceMaterial(materials);
 
 						mesh = new THREE.Mesh( geometry, materials );
 
